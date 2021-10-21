@@ -1,13 +1,10 @@
 ﻿using BotFramework.Extensions;
 using BotFramework.Handlers;
-using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 using BotFramework.Tests.Fakes;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace BotFramework.Tests
@@ -26,10 +23,8 @@ namespace BotFramework.Tests
 
             // Регистрируем необходимые зависимости для проверки работоспособности BranchBuilder
             services.AddBotFramework()
-                    .AddBot<BotBase>()
                     .AddHandler<FakeRequestHandler>()
-                    .AddHandler<FakeCommandHandler>()
-                    .AddLogging(); // Логгер используется в InternalHandler
+                    .AddHandler<FakeCommandHandler>();
 
             _sut = services.BuildServiceProvider()
                            .GetRequiredService<IBranchBuilder>();

@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using BotFramework.Handlers;
+﻿using BotFramework.Handlers;
 using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
 namespace BotFramework.Extensions
@@ -19,7 +19,14 @@ namespace BotFramework.Extensions
         /// <returns>Контейнер</returns>
         public static IServiceCollection AddBotFramework(this IServiceCollection services)
         {
+            services.AddLogging();
+
             services.TryAddTransient<IBranchBuilder, BranchBuilder>();
+            
+            services.TryAddTransient<Func<RequestDelegate, Predicate<object>, InternalHandler>>
+            (
+                serviceProvider => (branch, predicate) => ActivatorUtilities.CreateInstance<InternalHandler>(serviceProvider, branch, predicate)
+            );
 
             return services;
         }
@@ -36,11 +43,6 @@ namespace BotFramework.Extensions
             services.TryAddTransient<Func<RequestDelegate, IBot>>
             (
                 serviceProvider => branch => ActivatorUtilities.CreateInstance<TBot>(serviceProvider, branch)
-            );
-
-            services.TryAddTransient<Func<RequestDelegate, Predicate<object>, InternalHandler>>
-            (
-                serviceProvider => (branch, predicate) => ActivatorUtilities.CreateInstance<InternalHandler>(serviceProvider, branch, predicate)
             );
 
             return services;

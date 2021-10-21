@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using BotFramework.Handlers.Interfaces;
+﻿using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace BotFramework.Extensions
