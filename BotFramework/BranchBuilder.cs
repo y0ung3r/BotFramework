@@ -1,4 +1,5 @@
-﻿using BotFramework.Handlers;
+﻿using BotFramework.Extensions;
+using BotFramework.Handlers;
 using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,7 +57,7 @@ namespace BotFramework
             (
                 handler => new Func<RequestDelegate, RequestDelegate>
                 (
-                    next => request => handler.HandleAsync(request, next)
+                    next => handler.ToRequestDelegate(next)
                 )
             );
 
