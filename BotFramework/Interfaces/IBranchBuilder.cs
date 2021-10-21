@@ -1,5 +1,6 @@
 ﻿using BotFramework.Handlers.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace BotFramework.Interfaces
 {
@@ -12,6 +13,11 @@ namespace BotFramework.Interfaces
         /// Поставщик сервисов
         /// </summary>
         IServiceProvider ServiceProvider { get; }
+
+        /// <summary>
+        /// Список обработчиков, добавленных в цепочку 
+        /// </summary>
+        IReadOnlyCollection<IRequestHandler> Handlers { get; }
 
         /// <summary>
         /// Добавляет в цепочку обработчик запроса и возвращает текущий экземпляр построителя цепочки обязанностей

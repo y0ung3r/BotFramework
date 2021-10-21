@@ -1,53 +1,68 @@
 ﻿using BotFramework.Attributes;
 using BotFramework.Handlers.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace BotFramework.Extensions
 {
+    /// <summary>
+    /// Методы-расширения для <see cref="ICommandHandler"/>
+    /// </summary>
     public static class CommandHandlerExtensions
     {
-        public static CommandTextAttribute GetCommandAttribute(this ICommandHandler commandHandler)
+        /// <summary>
+        /// Возвращает атрибут команды
+        /// </summary>
+        /// <param name="commandHandler">Команда</param>
+        /// <returns>Атрибут команды</returns>
+        internal static CommandTextAttribute GetCommandAttribute(this ICommandHandler commandHandler)
         {
-            return commandHandler.GetType()
-                                 .GetCustomAttributes(inherit: false)
-                                 .ToList()
-                                 .FirstOrDefault(attribute => attribute is CommandTextAttribute) as CommandTextAttribute;
+            var attribute = commandHandler.GetType()
+                                          .GetCustomAttributes(inherit: false)
+                                          .ToList()
+                                          .FirstOrDefault(attribute => attribute is CommandTextAttribute);
+
+            return attribute as CommandTextAttribute;
         }
 
-        public static string GetCommandText(this ICommandHandler commandHandler)
+        /// <summary>
+        /// Возвращает список псевдонимов для вызова указанной команды
+        /// </summary>
+        /// <param name="commandHandler">Команда</param>
+        public static IEnumerable<string> GetCommandAliases(this ICommandHandler commandHandler)
         {
-            if (commandHandler.TryGetCommandAttribute(out var attribute))
+            var commandAttribute = commandHandler.GetCommandAttribute();
+            var commandText = commandAttribute?.CommandText;
+
+            if (string.IsNullOrWhiteSpace(commandText))
             {
-                return attribute.CommandText;
+                return Enumerable.Empty<string>();
             }
 
-            return string.Empty;
+            return Regex.Split
+            (
+                commandText,
+                pattern: @"\s*,\s*"
+            )
+            .ToList();
         }
 
-        public static bool TryGetCommandAttribute(this ICommandHandler commandHandler, out CommandTextAttribute attribute)
+        /// <summary>
+        /// Проверяет, является ли заданный текст одним из псевдонимов указанной команды
+        /// </summary>
+        /// <param name="commandHandler">Команда</param>
+        /// <param name="message">Псевдоним</param>
+        /// <returns>Значение "True" - является, а "False" - не является</returns>
+        public static bool TextIsCommandAlias(this ICommandHandler commandHandler, string message)
         {
-            attribute = commandHandler.GetCommandAttribute();
+            var commandAliases = commandHandler.GetCommandAliases();
 
-            return attribute is not null;
-        }
-
-        public static bool IsCommandTextContains(this ICommandHandler commandHandler, string message)
-        {
-            if (commandHandler.TryGetCommandAttribute(out var attribute))
-            {
-                return Regex.Split
-                (
-                    input: attribute.CommandText,
-                    pattern: @"\s*,\s*"
-                )
-                .Any
-                (
-                    pattern => Regex.IsMatch(message, $@"^$|\{pattern}")
-                );
-            }
-
-            return false;
+            return commandHandler.GetCommandAliases()
+                                 .Any
+                                 (
+                                     pattern => Regex.IsMatch(message, $@"^$|\{pattern}")
+                                 );
         }
     }
 }

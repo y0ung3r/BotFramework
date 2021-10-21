@@ -4,6 +4,7 @@ using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace BotFramework
@@ -13,6 +14,8 @@ namespace BotFramework
         private readonly Stack<IRequestHandler> _handlers;
 
         public IServiceProvider ServiceProvider { get; }
+
+        public IReadOnlyCollection<IRequestHandler> Handlers => _handlers.ToList().AsReadOnly();
 
         /// <summary>
         /// Базовый конструктор
