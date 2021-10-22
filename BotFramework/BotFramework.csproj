@@ -7,6 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей</Description>
     <RepositoryUrl>https://github.com/y0ung3r/BotFramework</RepositoryUrl>
+    <PackageId>bot-framework</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
