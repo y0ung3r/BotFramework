@@ -18,15 +18,25 @@ namespace BotFramework
         public IReadOnlyCollection<IRequestHandler> Handlers => _handlers.ToList().AsReadOnly();
 
         /// <summary>
-        /// Базовый конструктор
+        /// Конструктор для <see cref="BranchBuilder"/>
         /// </summary>
         /// <param name="serviceProvider">Поставщик сервисов</param>
         public BranchBuilder(IServiceProvider serviceProvider)
         {
             _handlers = new Stack<IRequestHandler>();
-            
+
             ServiceProvider = serviceProvider;
         }
+
+        /// <summary>
+        /// Конструктор для <see cref="BranchBuilder"/>
+        /// </summary>
+        /// <param name="services">Коллекция сервисов</param>
+        public BranchBuilder(IServiceCollection services)
+            : this(
+                services.BuildServiceProvider()
+            )
+        { }
 
         public IBranchBuilder UseHandler(IRequestHandler handler)
         {
@@ -49,7 +59,7 @@ namespace BotFramework
             );
         }
 
-        public RequestDelegate Build() 
+        public RequestDelegate Build()
         {
             var rootHandler = default(RequestDelegate);
 

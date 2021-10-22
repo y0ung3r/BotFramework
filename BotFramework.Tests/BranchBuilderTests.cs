@@ -21,13 +21,11 @@ namespace BotFramework.Tests
         {
             var services = new ServiceCollection();
 
-            // Регистрируем необходимые зависимости для проверки работоспособности BranchBuilder
             services.AddBotFramework()
                     .AddHandler<FakeRequestHandler>()
                     .AddHandler<FakeCommandHandler>();
 
-            _sut = services.BuildServiceProvider()
-                           .GetRequiredService<IBranchBuilder>();
+            _sut = new BranchBuilder(services);
         }
 
         [Test]

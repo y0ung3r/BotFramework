@@ -22,27 +22,12 @@ namespace BotFramework.Extensions
             services.AddLogging();
 
             services.TryAddTransient<IBranchBuilder, BranchBuilder>();
-            
+
+            services.TryAddTransient<IBotFactory, BotFactory>();
+
             services.TryAddTransient<Func<RequestDelegate, Predicate<object>, InternalHandler>>
             (
                 serviceProvider => (branch, predicate) => ActivatorUtilities.CreateInstance<InternalHandler>(serviceProvider, branch, predicate)
-            );
-
-            return services;
-        }
-
-        /// <summary>
-        /// Добавляет бота в контейнер
-        /// </summary>
-        /// <typeparam name="TBot">Бот, который необходимо добавить в контейнер</typeparam>
-        /// <param name="services">Контейнер</param>
-        /// <returns>Контейнер</returns>
-        public static IServiceCollection AddBot<TBot>(this IServiceCollection services)
-            where TBot : IBot
-        {
-            services.TryAddTransient<Func<RequestDelegate, IBot>>
-            (
-                serviceProvider => branch => ActivatorUtilities.CreateInstance<TBot>(serviceProvider, branch)
             );
 
             return services;
