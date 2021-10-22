@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Version>1.0.1</Version>
+    <Authors>y0ung3r</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей</Description>
+    <RepositoryUrl>https://github.com/y0ung3r/BotFramework</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
