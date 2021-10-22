@@ -1,10 +1,10 @@
-﻿using BotFramework.Handlers;
+﻿using BotFramework.Extensions;
+using BotFramework.Handlers;
 using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace BotFramework
@@ -18,15 +18,25 @@ namespace BotFramework
         public IReadOnlyCollection<IRequestHandler> Handlers => _handlers.ToList().AsReadOnly();
 
         /// <summary>
-        /// Базовый конструктор
+        /// Конструктор для <see cref="BranchBuilder"/>
         /// </summary>
         /// <param name="serviceProvider">Поставщик сервисов</param>
         public BranchBuilder(IServiceProvider serviceProvider)
         {
             _handlers = new Stack<IRequestHandler>();
-            
+
             ServiceProvider = serviceProvider;
         }
+
+        /// <summary>
+        /// Конструктор для <see cref="BranchBuilder"/>
+        /// </summary>
+        /// <param name="services">Коллекция сервисов</param>
+        public BranchBuilder(IServiceCollection services)
+            : this(
+                services.BuildServiceProvider()
+            )
+        { }
 
         public IBranchBuilder UseHandler(IRequestHandler handler)
         {
@@ -49,7 +59,7 @@ namespace BotFramework
             );
         }
 
-        public RequestDelegate Build() 
+        public RequestDelegate Build()
         {
             var rootHandler = default(RequestDelegate);
 
@@ -57,7 +67,7 @@ namespace BotFramework
             (
                 handler => new Func<RequestDelegate, RequestDelegate>
                 (
-                    next => request => handler.HandleAsync(request, next)
+                    next => handler.ToRequestDelegate(next)
                 )
             );
 
