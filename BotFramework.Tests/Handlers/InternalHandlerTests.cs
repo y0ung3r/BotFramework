@@ -1,4 +1,5 @@
-﻿using BotFramework.Handlers;
+﻿using BotFramework.Extensions;
+using BotFramework.Handlers;
 using BotFramework.Handlers.Interfaces;
 using BotFramework.Tests.Fakes;
 using Moq;
@@ -29,10 +30,9 @@ namespace BotFramework.Tests.Handlers
             var requestHandler = Activator.CreateInstance<TRequestHandler>();
             var requestDelegate = new RequestDelegate
             (
-                request => requestHandler.HandleAsync
+                requestHandler.ToRequestDelegate
                 (
-                    request, 
-                    nextHandler: It.IsAny<RequestDelegate>()
+                    It.IsAny<RequestDelegate>()
                 )
             );
 
