@@ -7,6 +7,9 @@ namespace BotFramework
     /// </summary>
     public abstract class BotBase : IBot
     {
+        /// <summary>
+        /// Обработчики запросов, прикрепленные к текущему боту
+        /// </summary>
         protected readonly RequestDelegate _rootHandler;
 
         /// <summary>
@@ -18,8 +21,14 @@ namespace BotFramework
             _rootHandler = rootHandler;
         }
 
+        /// <summary>
+        /// Запустить бота
+        /// </summary>
         public abstract void Run();
 
+        /// <summary>
+        /// Остановить бота
+        /// </summary>
         public abstract void Stop();
     }
 }

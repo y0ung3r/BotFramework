@@ -9,12 +9,21 @@ using System.Linq;
 
 namespace BotFramework
 {
+    /// <summary>
+    /// Стандартная реализация для <see cref="IBranchBuilder"/>
+    /// </summary>
     public class BranchBuilder : IBranchBuilder
     {
         private readonly Stack<IRequestHandler> _handlers;
 
+        /// <summary>
+        /// Поставщик сервисов
+        /// </summary>
         public IServiceProvider ServiceProvider { get; }
 
+        /// <summary>
+        /// Список обработчиков, добавленных в цепочку 
+        /// </summary>
         public IReadOnlyCollection<IRequestHandler> Handlers => _handlers.ToList().AsReadOnly();
 
         /// <summary>
@@ -38,6 +47,11 @@ namespace BotFramework
             )
         { }
 
+        /// <summary>
+        /// Добавляет в цепочку обработчик запроса и возвращает текущий экземпляр построителя цепочки обязанностей
+        /// </summary>
+        /// <param name="handler">Обработчик запроса, который необходимо добавить в цепочку</param>
+        /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
         public IBranchBuilder UseHandler(IRequestHandler handler)
         {
             _handlers.Push(handler);
@@ -45,6 +59,12 @@ namespace BotFramework
             return this;
         }
 
+        /// <summary>
+        /// Добавляет в цепочку отдельную ветвь и возвращает текущий экземпляр построителя цепочки обязанностей
+        /// </summary>
+        /// <param name="predicate">Условие, при котором происходит переход к добавляемой ветви при обработке запроса</param>
+        /// <param name="configure">Конфигурация добавляемой ветви</param>
+        /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
         public IBranchBuilder UseAnotherBranch(Predicate<object> predicate, Action<IBranchBuilder> configure)
         {
             var anotherBranchBuilder = ServiceProvider.GetRequiredService<IBranchBuilder>();
@@ -59,6 +79,10 @@ namespace BotFramework
             );
         }
 
+        /// <summary>
+        /// Строит цепочку обязанностей
+        /// </summary>
+        /// <returns>Цепочка обязанностей</returns>
         public RequestDelegate Build()
         {
             var rootHandler = default(RequestDelegate);

@@ -1,13 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <Version>1.0.1</Version>
-    <Authors>y0ung3r</Authors>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>y0ung3r (Nikita Velikiy)</Authors>
+    <Title>BotFramework</Title>
     <Description>Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей</Description>
     <RepositoryUrl>https://github.com/y0ung3r/BotFramework</RepositoryUrl>
-    <PackageId>bot-framework</PackageId>
+    <PackageId>BotFramework.NET</PackageId>
+    <Product>BotFramework</Product>
+    <PackageTags>.NET, Bot</PackageTags>
+    <PackageProjectUrl>https://github.com/y0ung3r/BotFramework</PackageProjectUrl>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
