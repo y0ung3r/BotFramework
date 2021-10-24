@@ -1,8 +1,8 @@
 # BotFramework
-![nuget](https://img.shields.io/nuget/v/BotFramework.NET)
-![downloads](https://img.shields.io/nuget/dt/BotFramework.NET?label=downloads) 
-![issues](https://img.shields.io/github/issues/y0ung3r/BotFramework)
-![pull requests](https://img.shields.io/github/issues-pr/y0ung3r/BotFramework)
+[![nuget](https://img.shields.io/nuget/v/BotFramework.NET)](http://www.nuget.org/packages/BotFramework.NET)
+[![downloads](https://img.shields.io/nuget/dt/BotFramework.NET?label=downloads)](http://www.nuget.org/packages/BotFramework.NET)
+[![issues](https://img.shields.io/github/issues/y0ung3r/BotFramework)](https://github.com/y0ung3r/BotFramework/issues)
+[![pull requests](https://img.shields.io/github/issues-pr/y0ung3r/BotFramework)](https://github.com/y0ung3r/BotFramework/pulls)
 
 Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей
 
