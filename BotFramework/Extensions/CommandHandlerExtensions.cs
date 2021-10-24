@@ -18,12 +18,12 @@ namespace BotFramework.Extensions
         /// <returns>Атрибут команды</returns>
         internal static CommandTextAttribute GetCommandAttribute(this ICommandHandler commandHandler)
         {
-            var attribute = commandHandler.GetType()
-                                          .GetCustomAttributes(inherit: false)
-                                          .ToList()
-                                          .FirstOrDefault(attribute => attribute is CommandTextAttribute);
+            var handlerAttribute = commandHandler.GetType()
+                                                 .GetCustomAttributes(inherit: false)
+                                                 .ToList()
+                                                 .FirstOrDefault(attribute => attribute is CommandTextAttribute);
 
-            return attribute as CommandTextAttribute;
+            return handlerAttribute as CommandTextAttribute;
         }
 
         /// <summary>

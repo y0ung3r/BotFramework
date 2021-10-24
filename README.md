@@ -1,4 +1,6 @@
 # BotFramework
+![nuget](https://img.shields.io/nuget/dt/BotFramework.NET?label=nuget)
+
 Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей
 
 ## Использование
