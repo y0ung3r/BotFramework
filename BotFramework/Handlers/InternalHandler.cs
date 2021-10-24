@@ -27,6 +27,11 @@ namespace BotFramework.Handlers
             _condition = condition;
         }
 
+        /// <summary>
+        /// Обработать запрос
+        /// </summary>
+        /// <param name="request">Запрос</param>
+        /// <param name="nextHandler">Следующий обработчик по цепочке</param>
         public Task HandleAsync(object request, RequestDelegate nextHandler)
         {
             if (_condition(request))
@@ -36,9 +41,16 @@ namespace BotFramework.Handlers
                 return _branch(request);
             }
 
-            _logger?.LogInformation("A request will be redirected to the next handler");
+            if (nextHandler != null) 
+            {
+                _logger?.LogInformation("A request will be redirected to the next handler");
 
-            return nextHandler(request);
+                return nextHandler(request);
+            }
+
+            _logger?.LogInformation("A request is processed");
+
+            return Task.CompletedTask;
         }
     }
 }

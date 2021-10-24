@@ -1,6 +1,5 @@
 ﻿using BotFramework.Extensions;
 using BotFramework.Handlers;
-using BotFramework.Interfaces;
 using BotFramework.Tests.Fakes;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,11 +9,11 @@ using System.Linq;
 namespace BotFramework.Tests
 {
     /// <summary>
-    /// Тесты для <see cref="IBranchBuilder"/>
+    /// Тесты для <see cref="BranchBuilder"/>
     /// </summary>
     public class BranchBuilderTests
     {
-        private IBranchBuilder _sut;
+        private BranchBuilder _sut;
 
         [SetUp]
         public void Setup()
@@ -29,7 +28,7 @@ namespace BotFramework.Tests
         }
 
         [Test]
-        public void Building_a_branch_with_a_handler()
+        public void Building_a_branch_with_the_handler()
         {
             // Arrange
             var requestHandler = new FakeRequestHandler();
@@ -52,7 +51,7 @@ namespace BotFramework.Tests
         }
 
         [Test]
-        public void Building_a_branch_with_a_command()
+        public void Building_a_branch_with_the_command()
         {
             // Arrange
             var commandHandler = new FakeCommandHandler();
@@ -76,7 +75,7 @@ namespace BotFramework.Tests
         }
 
         [Test]
-        public void Building_a_branch_with_a_handler_and_a_command()
+        public void Building_a_branch_with_the_handler_and_the_command()
         {
             // Arrange
             var requestHandler = new FakeRequestHandler();
