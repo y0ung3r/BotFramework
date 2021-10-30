@@ -5,9 +5,9 @@ using System;
 namespace BotFramework
 {
     /// <summary>
-    /// Стандартная реализация для <see cref="IBotFactory"/>
+    /// Стандартная реализация для <see cref="IBotCreator"/>
     /// </summary>
-    public class BotFactory : IBotFactory
+    public class BotCreator : IBotCreator
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -15,7 +15,7 @@ namespace BotFramework
         /// Базовый конструктор
         /// </summary>
         /// <param name="serviceProvider">Поставщик сервисов</param>
-        public BotFactory(IServiceProvider serviceProvider)
+        public BotCreator(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

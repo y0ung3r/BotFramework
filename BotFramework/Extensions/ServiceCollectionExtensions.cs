@@ -23,7 +23,7 @@ namespace BotFramework.Extensions
 
             services.TryAddTransient<IBranchBuilder, BranchBuilder>();
 
-            services.TryAddTransient<IBotFactory, BotFactory>();
+            services.TryAddTransient<IBotCreator, BotCreator>();
 
             services.TryAddTransient<Func<RequestDelegate, Predicate<object>, InternalHandler>>
             (

@@ -3,7 +3,7 @@
     /// <summary>
     /// Определяет фабричный метод для создания бота
     /// </summary>
-    public interface IBotFactory
+    public interface IBotCreator
     {
         /// <summary>
         /// Создать бота с указанным типом
