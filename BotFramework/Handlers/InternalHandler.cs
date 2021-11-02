@@ -36,19 +36,19 @@ namespace BotFramework.Handlers
         {
             if (_condition(request))
             {
-                _logger?.LogInformation("A request will be redirected to the branch");
+                _logger?.LogInformation("Текущий запрос перенаправляется во вложенную ветвь");
 
                 return _branch(request);
             }
 
             if (nextHandler != null) 
             {
-                _logger?.LogInformation("A request will be redirected to the next handler");
+                _logger?.LogInformation("Текущий запрос перенаправляется к следующему обработчику по цепочке");
 
                 return nextHandler(request);
             }
 
-            _logger?.LogInformation("A request is processed");
+            _logger?.LogInformation("Запрос обработан");
 
             return Task.CompletedTask;
         }

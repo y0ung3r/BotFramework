@@ -3,6 +3,7 @@ using BotFramework.Handlers;
 using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace BotFramework
     /// </summary>
     public class BranchBuilder : IBranchBuilder
     {
+        private readonly ILogger<BranchBuilder> _logger;
+
         private readonly Stack<IRequestHandler> _handlers;
 
         /// <summary>
@@ -32,9 +35,10 @@ namespace BotFramework
         /// <param name="serviceProvider">Поставщик сервисов</param>
         public BranchBuilder(IServiceProvider serviceProvider)
         {
-            _handlers = new Stack<IRequestHandler>();
-
             ServiceProvider = serviceProvider;
+
+            _handlers = new Stack<IRequestHandler>();
+            _logger = ServiceProvider.GetService<ILogger<BranchBuilder>>();
         }
 
         /// <summary>
@@ -56,6 +60,8 @@ namespace BotFramework
         {
             _handlers.Push(handler);
 
+            _logger?.LogInformation("Обработчик запроса добавлен в цепочку");
+
             return this;
         }
 
@@ -72,6 +78,8 @@ namespace BotFramework
 
             var anotherBranch = anotherBranchBuilder.Build();
             var internalHandlerFactory = ServiceProvider.GetRequiredService<Func<RequestDelegate, Predicate<object>, InternalHandler>>();
+
+            _logger?.LogInformation("Новая ветвь для текущей цепочки обработчиков сконфигурирована");
 
             return UseHandler
             (
@@ -99,6 +107,8 @@ namespace BotFramework
             {
                 rootHandler = handler(rootHandler);
             }
+
+            _logger?.LogInformation("Цепочка обязанностей построена");
 
             return rootHandler;
         }
