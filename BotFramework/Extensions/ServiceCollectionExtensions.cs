@@ -13,7 +13,7 @@ namespace BotFramework.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Добавляет BotFramework в контейнер
+        /// Добавляет BotFramework и указанного бота в контейнер
         /// </summary>
         /// <param name="services">Контейнер</param>
         /// <returns>Контейнер</returns>
@@ -22,8 +22,6 @@ namespace BotFramework.Extensions
             services.AddLogging();
 
             services.TryAddTransient<IBranchBuilder, BranchBuilder>();
-
-            services.TryAddTransient<IBotCreator, BotCreator>();
 
             services.TryAddTransient<Func<RequestDelegate, Predicate<object>, InternalHandler>>
             (

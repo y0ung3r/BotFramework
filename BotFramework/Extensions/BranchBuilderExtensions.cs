@@ -52,7 +52,7 @@ namespace BotFramework.Extensions
         {
             return builder.UseAnotherBranch
             (
-                request => commandHandler.CanHandle(builder.ServiceProvider, request),
+                request => commandHandler.CanHandle(request),
                 branchBuilder => branchBuilder.UseHandler(commandHandler)
             );
         }

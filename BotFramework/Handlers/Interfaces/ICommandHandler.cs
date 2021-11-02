@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BotFramework.Handlers.Interfaces
+﻿namespace BotFramework.Handlers.Interfaces
 {
     /// <summary>
     /// Определяет обработчик команды
@@ -10,8 +8,7 @@ namespace BotFramework.Handlers.Interfaces
         /// <summary>
         /// Проверяет может ли команда быть исполнена
         /// </summary>
-        /// <param name="serviceProvider">Поставщик сервисов</param>
         /// <param name="request">Запрос</param>
-        bool CanHandle(IServiceProvider serviceProvider, object request);
+        bool CanHandle(object request);
     }
 }
