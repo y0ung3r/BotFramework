@@ -1,6 +1,5 @@
 ﻿using BotFramework.Attributes;
 using BotFramework.Handlers.Interfaces;
-using System;
 using System.Threading.Tasks;
 
 namespace BotFramework.Tests.Fakes
