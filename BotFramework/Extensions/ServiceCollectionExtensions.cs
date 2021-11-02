@@ -3,6 +3,8 @@ using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 
 namespace BotFramework.Extensions
@@ -19,7 +21,11 @@ namespace BotFramework.Extensions
         /// <returns>Контейнер</returns>
         public static IServiceCollection AddBotFramework(this IServiceCollection services)
         {
-            services.AddLogging();
+            services.TryAddSingleton
+            (
+                typeof(ILogger<>), 
+                typeof(NullLogger<>)
+            );
 
             services.TryAddTransient<IBranchBuilder, BranchBuilder>();
 
