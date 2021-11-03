@@ -1,5 +1,4 @@
 ﻿using BotFramework.Extensions;
-using BotFramework.Handlers;
 using BotFramework.Tests.Fakes;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;

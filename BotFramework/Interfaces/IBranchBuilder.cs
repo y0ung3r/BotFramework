@@ -1,11 +1,10 @@
-﻿using BotFramework.Handlers.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace BotFramework.Interfaces
 {
     /// <summary>
-    /// Определяет построитель цепочку обязанностей для бота
+    /// Определяет построитель цепочки обязанностей для бота
     /// </summary>
     public interface IBranchBuilder
     {

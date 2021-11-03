@@ -1,6 +1,6 @@
-﻿using BotFramework.Handlers.Interfaces;
+﻿using BotFramework.Interfaces;
 
-namespace BotFramework.Handlers
+namespace BotFramework
 {
     /// <summary>
     /// Родительский класс для всех <see cref="ICommandHandler"/>

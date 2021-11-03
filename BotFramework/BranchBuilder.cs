@@ -1,6 +1,4 @@
 ﻿using BotFramework.Extensions;
-using BotFramework.Handlers;
-using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,7 +14,6 @@ namespace BotFramework
     internal class BranchBuilder : IBranchBuilder
     {
         private readonly ILogger<BranchBuilder> _logger;
-
         private readonly Stack<IRequestHandler> _handlers;
 
         /// <summary>
@@ -37,8 +34,8 @@ namespace BotFramework
         {
             ServiceProvider = serviceProvider;
 
-            _handlers = new Stack<IRequestHandler>();
             _logger = ServiceProvider.GetService<ILogger<BranchBuilder>>();
+            _handlers = new Stack<IRequestHandler>();
         }
 
         /// <summary>

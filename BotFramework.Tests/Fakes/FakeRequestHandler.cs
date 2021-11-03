@@ -1,4 +1,4 @@
-﻿using BotFramework.Handlers.Interfaces;
+﻿using BotFramework.Interfaces;
 using System.Threading.Tasks;
 
 namespace BotFramework.Tests.Fakes

@@ -1,13 +1,13 @@
-﻿using BotFramework.Handlers.Interfaces;
+﻿using BotFramework.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-namespace BotFramework.Handlers
+namespace BotFramework.StepHandler
 {
     /// <summary>
     /// Представляет переход запроса в указанный обработчик
     /// </summary>
-    internal class TransitionHandler : IRequestHandler
+    internal sealed class TransitionHandler : IRequestHandler
     {
         private readonly ILogger<TransitionHandler> _logger;
         private readonly RequestDelegate _from;

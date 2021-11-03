@@ -1,14 +1,14 @@
-﻿using BotFramework.Handlers.Interfaces;
+﻿using BotFramework.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace BotFramework.Handlers
+namespace BotFramework
 {
     /// <summary>
     /// Представляет обработчик, который перенаправляет запрос из одной ветки обработчиков в другую
     /// </summary>
-    internal class InternalHandler : IRequestHandler
+    internal sealed class InternalHandler : IRequestHandler
     {
         private readonly ILogger<InternalHandler> _logger;
         private readonly RequestDelegate _branch;

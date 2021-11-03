@@ -1,5 +1,5 @@
 ﻿using BotFramework.Attributes;
-using BotFramework.Handlers.Interfaces;
+using BotFramework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;

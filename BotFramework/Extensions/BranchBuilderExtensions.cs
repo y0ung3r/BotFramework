@@ -1,5 +1,4 @@
-﻿using BotFramework.Handlers.Interfaces;
-using BotFramework.Interfaces;
+﻿using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
