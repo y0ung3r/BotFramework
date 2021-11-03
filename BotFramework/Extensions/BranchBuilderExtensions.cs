@@ -67,8 +67,17 @@ namespace BotFramework.Extensions
         {
             return builder.UseCommand
             (
-                builder.ServiceProvider
-                       .GetRequiredService<TCommandHandler>()
+                builder.ServiceProvider.GetRequiredService<TCommandHandler>()
+            );
+        }
+
+        public static IBranchBuilder UseStepHandler<TCommandHandler>(this IBranchBuilder builder, Action<IBranchBuilder> configure)
+            where TCommandHandler : ICommandHandler
+        {
+            return builder.UseStepHandler
+            (
+                builder.ServiceProvider.GetRequiredService<TCommandHandler>(),
+                configure
             );
         }
     }

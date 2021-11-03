@@ -1,39 +1,45 @@
 ﻿using BotFramework.Interfaces;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BotFramework.StepHandler
 {
-    /// <summary>
-    /// Представляет переход запроса в указанный обработчик
-    /// </summary>
-    internal sealed class TransitionHandler : IRequestHandler
+    internal sealed class TransitionHandler : ICommandHandler
     {
         private readonly ILogger<TransitionHandler> _logger;
-        private readonly RequestDelegate _from;
-        private readonly RequestDelegate _to;
+        private IReadOnlyCollection<IRequestHandler> _source;
+        private readonly ICommandHandler _head;
+        private readonly Stack<IRequestHandler> _handlers;
 
-        /// <summary>
-        /// Базовый конструктор
-        /// </summary>
-        /// <param name="logger">Сервис логгирования</param>
-        /// <param name="from">Обработчик из которого нужно осуществить переход</param>
-        /// <param name="to">Обработчик в который нужно осуществить переход</param>
-        public TransitionHandler(ILogger<TransitionHandler> logger, RequestDelegate from, RequestDelegate to)
+        public TransitionHandler(ILogger<TransitionHandler> logger, IReadOnlyCollection<IRequestHandler> handlers, ICommandHandler head)
         {
             _logger = logger;
-            _from = from;
-            _to = to;
+            _source = handlers;
+            _head = head;
+            _handlers = new Stack<IRequestHandler>(_source);
         }
 
-        /// <summary>
-        /// Обработать запрос
-        /// </summary>
-        /// <param name="request">Запрос</param>
-        /// <param name="nextHandler">Следующий обработчик по цепочке</param>
         public Task HandleAsync(object request, RequestDelegate nextHandler)
         {
-            throw new System.NotImplementedException();
+            if (!_handlers.Any())
+            {
+                foreach (var handler in _source)
+                {
+                    _handlers.Push(handler);
+                }
+
+                return _head.HandleAsync(request, nextHandler);
+            }
+
+            return _handlers.Pop()
+                            .HandleAsync(request, nextHandler);
+        }
+
+        public bool CanHandle(object request)
+        {
+            return _head.CanHandle(request) || _handlers.Any();
         }
     }
 }
