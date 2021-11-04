@@ -33,8 +33,6 @@ namespace BotFramework.Interfaces
         /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
         IBranchBuilder UseAnotherBranch(Predicate<object> predicate, Action<IBranchBuilder> configure);
 
-        IBranchBuilder UseStepHandler(ICommandHandler commandHandler, Action<IBranchBuilder> configure);
-
         /// <summary>
         /// Строит цепочку обязанностей
         /// </summary>

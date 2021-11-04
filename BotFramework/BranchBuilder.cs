@@ -1,6 +1,5 @@
 ﻿using BotFramework.Extensions;
 using BotFramework.Interfaces;
-using BotFramework.StepHandler;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -50,37 +49,6 @@ namespace BotFramework
         { }
 
         /// <summary>
-        /// Создает и конфигурирует отдельную ветвь
-        /// </summary>
-        /// <param name="configure">Конфигурация для добавляемой ветви</param>
-        /// <returns></returns>
-        private IBranchBuilder CreateAnotherBranch(Action<IBranchBuilder> configure)
-        {
-            var anotherBranchBuilder = ServiceProvider.GetRequiredService<IBranchBuilder>();
-
-            configure(anotherBranchBuilder);
-
-            return anotherBranchBuilder;
-        }
-
-        /// <summary>
-        /// Возвращает фабрику по созданию <see cref="InternalHandler"/> 
-        /// </summary>
-        private Func<RequestDelegate, Predicate<object>, InternalHandler> CreateInternalHandlerFactory()
-        {
-            return ServiceProvider.GetRequiredService<Func<RequestDelegate, Predicate<object>, InternalHandler>>();
-        }
-
-        /// <summary>
-        /// Возвращает фабрику по созданию <see cref="TransitionHandler"/>
-        /// </summary>
-        /// <returns></returns>
-        private Func<IReadOnlyCollection<IRequestHandler>, ICommandHandler, TransitionHandler> CreateTransitionHandlerFactory()
-        {
-            return ServiceProvider.GetRequiredService<Func<IReadOnlyCollection<IRequestHandler>, ICommandHandler, TransitionHandler>>();
-        }
-
-        /// <summary>
         /// Добавляет в цепочку обработчик запроса и возвращает текущий экземпляр построителя цепочки обязанностей
         /// </summary>
         /// <param name="handler">Обработчик запроса, который необходимо добавить в цепочку</param>
@@ -101,32 +69,18 @@ namespace BotFramework
         /// <param name="configure">Конфигурация для добавляемой ветви</param>
         /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
         public IBranchBuilder UseAnotherBranch(Predicate<object> predicate, Action<IBranchBuilder> configure)
-        { 
-            var anotherBranch = CreateAnotherBranch(configure).Build();
-            var internalHandlerFactory = CreateInternalHandlerFactory();
+        {
+            var anotherBranchBuilder = ServiceProvider.GetRequiredService<IBranchBuilder>();
+            configure(anotherBranchBuilder);
+
+            var anotherBranch = anotherBranchBuilder.Build();
+            var internalHandlerFactory = ServiceProvider.GetRequiredService<Func<RequestDelegate, Predicate<object>, InternalHandler>>();
 
             _logger?.LogInformation("Новая ветвь для текущей цепочки обработчиков сконфигурирована");
 
             return UseHandler
             (
                 internalHandlerFactory(anotherBranch, predicate)
-            );
-        }
-
-        public IBranchBuilder UseStepHandler(ICommandHandler commandHandler, Action<IBranchBuilder> configure)
-        {
-            var anotherBranchBuilder = CreateAnotherBranch(configure);
-            var transitionHandlerFactory = CreateTransitionHandlerFactory();
-
-            var handlers = anotherBranchBuilder.Handlers
-                                               .ToList()
-                                               .AsReadOnly();
-            
-            _logger?.LogInformation($"Пошаговый обработчик для {commandHandler.GetType()} сконфигурирован");
-
-            return this.UseCommand
-            (
-                transitionHandlerFactory(handlers, commandHandler)
             );
         }
 

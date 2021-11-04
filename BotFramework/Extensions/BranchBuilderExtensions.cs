@@ -1,6 +1,9 @@
 ﻿using BotFramework.Interfaces;
+using BotFramework.StepHandler;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BotFramework.Extensions
 {
@@ -68,6 +71,30 @@ namespace BotFramework.Extensions
             return builder.UseCommand
             (
                 builder.ServiceProvider.GetRequiredService<TCommandHandler>()
+            );
+        }
+
+        /// <summary>
+        /// Добавляет пошаговый обработчик в цепочку обработчиков
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="commandHandler"></param>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public static IBranchBuilder UseStepHandler(this IBranchBuilder builder, ICommandHandler commandHandler, Action<IBranchBuilder> configure)
+        {
+            var anotherBranchBuilder = builder.ServiceProvider.GetRequiredService<IBranchBuilder>();
+            configure(anotherBranchBuilder);
+
+            var transitionHandlerFactory = builder.ServiceProvider.GetRequiredService<Func<IReadOnlyCollection<IRequestHandler>, ICommandHandler, TransitionHandler>>();
+
+            var handlers = anotherBranchBuilder.Handlers
+                                               .ToList()
+                                               .AsReadOnly();
+
+            return builder.UseCommand
+            (
+                transitionHandlerFactory(handlers, commandHandler)
             );
         }
 
