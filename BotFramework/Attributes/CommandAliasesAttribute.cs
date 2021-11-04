@@ -6,20 +6,20 @@ namespace BotFramework.Attributes
     /// Атрибут, используемый для того, чтобы явно указать текст команды
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class CommandTextAttribute : Attribute
+    public class CommandAliasesAttribute : Attribute
     {
         /// <summary>
-        /// Текст команды
+        /// Псевдонимы команды
         /// </summary>
-        public string CommandText { get; }
+        public string CommandAliases { get; }
 
         /// <summary>
         /// Базовый конструктор
         /// </summary>
-        /// <param name="commandText">Текст команды</param>
-        public CommandTextAttribute(string commandText)
+        /// <param name="commandAliases">Псевдонимы команды через запятую</param>
+        public CommandAliasesAttribute(string commandAliases)
         {
-            CommandText = commandText;
+            CommandAliases = commandAliases;
         }
     }
 }

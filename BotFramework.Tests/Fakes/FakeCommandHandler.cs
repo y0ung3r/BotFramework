@@ -1,10 +1,10 @@
 ﻿using BotFramework.Attributes;
-using BotFramework.Interfaces;
+using BotFramework.Handlers.Interfaces;
 using System.Threading.Tasks;
 
 namespace BotFramework.Tests.Fakes
 {
-    [CommandText("/fake, /command")]
+    [CommandAliases("/fake, /command")]
     public class FakeCommandHandler : ICommandHandler
     {
         public bool CanHandle(object request) => true;

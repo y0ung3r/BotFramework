@@ -1,4 +1,5 @@
 ﻿using BotFramework.Attributes;
+using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +17,14 @@ namespace BotFramework.Extensions
         /// </summary>
         /// <param name="commandHandler">Команда</param>
         /// <returns>Атрибут команды</returns>
-        internal static CommandTextAttribute GetCommandAttribute(this ICommandHandler commandHandler)
+        internal static CommandAliasesAttribute GetCommandAttribute(this ICommandHandler commandHandler)
         {
             var handlerAttribute = commandHandler.GetType()
                                                  .GetCustomAttributes(inherit: false)
                                                  .ToList()
-                                                 .FirstOrDefault(attribute => attribute is CommandTextAttribute);
+                                                 .FirstOrDefault(attribute => attribute is CommandAliasesAttribute);
 
-            return handlerAttribute as CommandTextAttribute;
+            return handlerAttribute as CommandAliasesAttribute;
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace BotFramework.Extensions
         public static IEnumerable<string> GetCommandAliases(this ICommandHandler commandHandler)
         {
             var commandAttribute = commandHandler.GetCommandAttribute();
-            var commandText = commandAttribute?.CommandText;
+            var commandText = commandAttribute?.CommandAliases;
 
             if (string.IsNullOrWhiteSpace(commandText))
             {

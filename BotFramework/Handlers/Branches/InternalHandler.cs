@@ -1,9 +1,9 @@
-﻿using BotFramework.Interfaces;
+﻿using BotFramework.Handlers.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace BotFramework
+namespace BotFramework.Handlers.Branches
 {
     /// <summary>
     /// Представляет обработчик, который перенаправляет запрос из одной ветки обработчиков в другую

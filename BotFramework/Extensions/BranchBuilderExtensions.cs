@@ -1,9 +1,9 @@
-﻿using BotFramework.Interfaces;
-using BotFramework.StepHandler;
+﻿using BotFramework.Handlers.Interfaces;
+using BotFramework.Handlers.StepHandler;
+using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BotFramework.Extensions
 {
@@ -77,27 +77,30 @@ namespace BotFramework.Extensions
         /// <summary>
         /// Добавляет пошаговый обработчик в цепочку обработчиков
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="commandHandler"></param>
-        /// <param name="configure"></param>
-        /// <returns></returns>
+        /// <param name="builder">Построитель цепочки обязанностей</param>
+        /// <param name="commandHandler">Обработчик команды, который должен пошагового обрабатываться</param>
+        /// <param name="configure">Конфигурация</param>
+        /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
         public static IBranchBuilder UseStepHandler(this IBranchBuilder builder, ICommandHandler commandHandler, Action<IBranchBuilder> configure)
         {
             var anotherBranchBuilder = builder.ServiceProvider.GetRequiredService<IBranchBuilder>();
             configure(anotherBranchBuilder);
-
+            
             var transitionHandlerFactory = builder.ServiceProvider.GetRequiredService<Func<IReadOnlyCollection<IRequestHandler>, ICommandHandler, TransitionHandler>>();
-
-            var handlers = anotherBranchBuilder.Handlers
-                                               .ToList()
-                                               .AsReadOnly();
 
             return builder.UseCommand
             (
-                transitionHandlerFactory(handlers, commandHandler)
+                transitionHandlerFactory(anotherBranchBuilder.Handlers, commandHandler)
             );
         }
 
+        /// <summary>
+        /// Добавляет пошаговый обработчик с указанным типом в цепочку обработчиков
+        /// </summary>
+        /// <typeparam name="TCommandHandler">Тип обработчик команды, который должен пошагового обрабатываться</typeparam>
+        /// <param name="builder">Построитель цепочки обязанностей</param>
+        /// <param name="configure">Конфигурация</param>
+        /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
         public static IBranchBuilder UseStepHandler<TCommandHandler>(this IBranchBuilder builder, Action<IBranchBuilder> configure)
             where TCommandHandler : ICommandHandler
         {

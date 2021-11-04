@@ -1,7 +1,7 @@
-﻿using BotFramework.Interfaces;
+﻿using BotFramework.Handlers.Interfaces;
 using System.Threading.Tasks;
 
-namespace BotFramework
+namespace BotFramework.Handlers
 {
     /// <summary>
     /// Родительский класс для всех <see cref="IRequestHandler"/>
