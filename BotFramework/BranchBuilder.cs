@@ -119,7 +119,6 @@ namespace BotFramework
             var transitionHandlerFactory = CreateTransitionHandlerFactory();
 
             var handlers = anotherBranchBuilder.Handlers
-                                               .Reverse()
                                                .ToList()
                                                .AsReadOnly();
             

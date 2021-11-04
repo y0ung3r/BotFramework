@@ -18,7 +18,7 @@ namespace BotFramework.StepHandler
             _logger = logger;
             _source = handlers;
             _head = head;
-            _handlers = new Stack<IRequestHandler>(_source);
+            _handlers = new Stack<IRequestHandler>();
         }
 
         public Task HandleAsync(object request, RequestDelegate nextHandler)
