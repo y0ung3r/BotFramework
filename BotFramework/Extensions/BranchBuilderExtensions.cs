@@ -86,11 +86,11 @@ namespace BotFramework.Extensions
             var anotherBranchBuilder = builder.ServiceProvider.GetRequiredService<IBranchBuilder>();
             configure(anotherBranchBuilder);
             
-            var transitionHandlerFactory = builder.ServiceProvider.GetRequiredService<Func<IReadOnlyCollection<IRequestHandler>, ICommandHandler, TransitionHandler>>();
+            var transitionHandlerFactory = builder.ServiceProvider.GetRequiredService<Func<ICommandHandler, IReadOnlyCollection<IRequestHandler>, TransitionHandler>>();
 
             return builder.UseCommand
             (
-                transitionHandlerFactory(anotherBranchBuilder.Handlers, commandHandler)
+                transitionHandlerFactory(commandHandler, anotherBranchBuilder.Handlers)
             );
         }
 
