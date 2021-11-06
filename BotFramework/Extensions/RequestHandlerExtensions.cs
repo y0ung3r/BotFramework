@@ -11,10 +11,10 @@ namespace BotFramework.Extensions
         /// Преобразует <see cref="IRequestHandler"/> в <see cref="RequestDelegate"/>
         /// </summary>
         /// <param name="requestHandler">Обработчик запроса</param>
-        /// <param name="nextRequestDelegate">Следующий за текущим обработчик запроса</param>
-        public static RequestDelegate ToRequestDelegate(this IRequestHandler requestHandler, RequestDelegate nextRequestDelegate)
+        /// <param name="nextHandler">Следующий за текущим обработчик запроса</param>
+        public static RequestDelegate ToRequestDelegate(this IRequestHandler requestHandler, RequestDelegate nextHandler)
         {
-            return request => requestHandler.HandleAsync(request, nextRequestDelegate);
+            return request => requestHandler.HandleAsync(request, nextHandler);
         }
     }
 }

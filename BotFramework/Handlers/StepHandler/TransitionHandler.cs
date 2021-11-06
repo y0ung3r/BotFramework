@@ -25,9 +25,9 @@ namespace BotFramework.Handlers.StepHandler
         /// Базовый конструктор
         /// </summary>
         /// <param name="logger">Сервис логгирования</param>
-        /// <param name="handlers">Обработчики, который необходимо выполнять пошагово</param>
         /// <param name="head">Команда, которая запускает пошаговый обработчик</param>
-        public TransitionHandler(ILogger<TransitionHandler> logger, IReadOnlyCollection<IRequestHandler> handlers, ICommandHandler head)
+        /// <param name="handlers">Обработчики, который необходимо выполнять пошагово</param>        
+        public TransitionHandler(ILogger<TransitionHandler> logger, ICommandHandler head, IReadOnlyCollection<IRequestHandler> handlers)
         {
             _logger = logger;
             _source = handlers;
@@ -45,6 +45,8 @@ namespace BotFramework.Handlers.StepHandler
             if (!IsRunning)
             {
                 _logger?.LogInformation("Запуск пошагового обработчика и передача в него текущего запроса");
+
+                _handlers.Clear();
 
                 foreach (var handler in _source)
                 {
