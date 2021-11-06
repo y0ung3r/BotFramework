@@ -1,6 +1,5 @@
 ﻿using BotFramework.Attributes;
 using BotFramework.Handlers.Interfaces;
-using BotFramework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -57,8 +56,6 @@ namespace BotFramework.Extensions
         /// <returns>Значение "True" - является, а "False" - не является</returns>
         public static bool TextIsCommandAlias(this ICommandHandler commandHandler, string message)
         {
-            var commandAliases = commandHandler.GetCommandAliases();
-
             return commandHandler.GetCommandAliases()
                                  .Any
                                  (

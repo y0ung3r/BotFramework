@@ -3,7 +3,7 @@
 namespace BotFramework.Attributes
 {
     /// <summary>
-    /// Атрибут, используемый для того, чтобы явно указать текст команды
+    /// Атрибут, используемый для того, чтобы явно указать псевдонимы команды
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class CommandAliasesAttribute : Attribute

@@ -12,7 +12,7 @@ namespace BotFramework.Handlers.StepHandler
     internal sealed class TransitionHandler : ICommandHandler
     {
         private readonly ILogger<TransitionHandler> _logger;
-        private IReadOnlyCollection<IRequestHandler> _source;
+        private readonly IReadOnlyCollection<IRequestHandler> _source;
         private readonly ICommandHandler _head;
         private readonly Stack<IRequestHandler> _handlers;
 
