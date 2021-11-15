@@ -11,7 +11,6 @@ namespace BotFramework.Example.Second
     {
         public override Task HandleAsync(string request, RequestDelegate nextHandler)
         {
-            Console.WriteLine($"Вы ввели текст: {request}");
             Console.WriteLine("Вызвана команда /second");
 
             return Task.CompletedTask;

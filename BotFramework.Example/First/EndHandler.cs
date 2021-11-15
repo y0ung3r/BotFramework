@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BotFramework.Abstractions;
-using BotFramework.Handlers;
 
 namespace BotFramework.Example.First
 {
@@ -9,6 +8,7 @@ namespace BotFramework.Example.First
     {
         public override Task HandleAsync(string request, RequestDelegate nextHandler)
         {
+            Console.WriteLine($"Вы ввели текст: {request}");
             Console.WriteLine("Конец команды /first");
 
             return Task.CompletedTask;
