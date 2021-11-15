@@ -1,8 +1,8 @@
-﻿using BotFramework.Handlers;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using BotFramework.Handlers;
 
-namespace BotFramework.Example
+namespace BotFramework.Example.Common
 {
     internal class MissingRequestHandler : RequestHandlerBase<string>
     {

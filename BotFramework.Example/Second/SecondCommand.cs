@@ -1,17 +1,17 @@
-﻿using BotFramework.Handlers;
-using BotFramework.Extensions;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using BotFramework.Attributes;
+using BotFramework.Extensions;
+using BotFramework.Handlers;
 
-namespace BotFramework.Example
+namespace BotFramework.Example.Second
 {
-    [CommandAliases("/another")]
-    internal class AnotherCommand : CommandHandlerBase<string>
+    [CommandAliases("/second")]
+    internal class SecondCommand : CommandHandlerBase<string>
     {
         public override Task HandleAsync(string request, RequestDelegate nextHandler)
         {
-            Console.WriteLine("Вызвана команда /another");
+            Console.WriteLine("Вызвана команда /second");
 
             return Task.CompletedTask;
         }

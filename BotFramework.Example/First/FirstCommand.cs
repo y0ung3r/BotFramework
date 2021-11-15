@@ -1,17 +1,17 @@
-﻿using BotFramework.Attributes;
+﻿using System;
+using System.Threading.Tasks;
+using BotFramework.Attributes;
 using BotFramework.Extensions;
 using BotFramework.Handlers;
-using System;
-using System.Threading.Tasks;
 
-namespace BotFramework.Example
+namespace BotFramework.Example.First
 {
-    [CommandAliases("/bind")]
-    internal class BindCommand : CommandHandlerBase<string>
+    [CommandAliases("/first")]
+    internal class FirstCommand : CommandHandlerBase<string>
     {
         public override Task HandleAsync(string request, RequestDelegate nextHandler)
         {
-            Console.WriteLine("Начало команды /bind");
+            Console.WriteLine("Начало команды /first");
 
             return Task.CompletedTask;
         }

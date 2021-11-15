@@ -1,10 +1,10 @@
-﻿using BotFramework.Handlers;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using BotFramework.Handlers;
 
-namespace BotFramework.Example
+namespace BotFramework.Example.First
 {
-    internal class MiddlewareHandler : RequestHandlerBase<string>
+    internal class StartHandler : RequestHandlerBase<string>
     {
         public override Task HandleAsync(string request, RequestDelegate nextHandler)
         {
