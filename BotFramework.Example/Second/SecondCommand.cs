@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using BotFramework.Abstractions;
 using BotFramework.Attributes;
 using BotFramework.Extensions;
-using BotFramework.Handlers;
 
 namespace BotFramework.Example.Second
 {
@@ -11,6 +11,7 @@ namespace BotFramework.Example.Second
     {
         public override Task HandleAsync(string request, RequestDelegate nextHandler)
         {
+            Console.WriteLine($"Вы ввели текст: {request}");
             Console.WriteLine("Вызвана команда /second");
 
             return Task.CompletedTask;

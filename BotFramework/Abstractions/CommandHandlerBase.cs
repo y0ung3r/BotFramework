@@ -1,6 +1,4 @@
-﻿using BotFramework.Handlers.Interfaces;
-
-namespace BotFramework.Handlers
+﻿namespace BotFramework.Abstractions
 {
     /// <summary>
     /// Родительский класс для всех <see cref="ICommandHandler"/>

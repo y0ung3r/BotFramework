@@ -1,7 +1,7 @@
-﻿using BotFramework.Handlers.Interfaces;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using BotFramework.Abstractions;
 
 namespace BotFramework.Handlers.Branches
 {

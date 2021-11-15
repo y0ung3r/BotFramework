@@ -1,8 +1,8 @@
 ﻿using BotFramework.Extensions;
-using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using BotFramework.Abstractions;
 using BotFramework.Example.Common;
 using BotFramework.Example.First;
 using BotFramework.Example.Second;

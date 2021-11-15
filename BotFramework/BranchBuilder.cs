@@ -1,12 +1,10 @@
 ﻿using BotFramework.Extensions;
-using BotFramework.Handlers.Branches;
-using BotFramework.Handlers.Interfaces;
-using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BotFramework.Abstractions;
 
 namespace BotFramework
 {
@@ -65,47 +63,20 @@ namespace BotFramework
         }
 
         /// <summary>
-        /// Добавляет в цепочку отдельную ветвь и возвращает текущий экземпляр построителя цепочки обязанностей
-        /// </summary>
-        /// <param name="predicate">Условие, при котором происходит переход к добавляемой ветви при обработке запроса</param>
-        /// <param name="configure">Конфигурация для добавляемой ветви</param>
-        /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
-        public IBranchBuilder UseAnotherBranch(Predicate<object> predicate, Action<IBranchBuilder> configure)
-        {
-            var anotherBranchBuilder = ServiceProvider.GetRequiredService<IBranchBuilder>();
-            configure(anotherBranchBuilder);
-
-            var anotherBranch = anotherBranchBuilder.Build();
-            var internalHandlerFactory = ServiceProvider.GetRequiredService<Func<RequestDelegate, Predicate<object>, InternalHandler>>();
-
-            _logger?.LogInformation("Новая ветвь для текущей цепочки обработчиков сконфигурирована");
-
-            return UseHandler
-            (
-                internalHandlerFactory(anotherBranch, predicate)
-            );
-        }
-
-        /// <summary>
         /// Строит цепочку обязанностей
         /// </summary>
         /// <returns>Цепочка обязанностей</returns>
         public RequestDelegate Build()
         {
-            var rootHandler = default(RequestDelegate);
-
-            var branch = _handlers.Select
+            var rootHandler = _handlers.Select
             (
-                handler => new Func<RequestDelegate, RequestDelegate>
-                (
-                    next => handler.ToRequestDelegate(next)
-                )
+                handler => new Func<RequestDelegate, RequestDelegate>(handler.ToRequestDelegate)
+            )
+            .Aggregate
+            (
+                default(RequestDelegate), 
+                (nextHandler, currentHandler) => currentHandler(nextHandler)
             );
-
-            foreach (var handler in branch)
-            {
-                rootHandler = handler(rootHandler);
-            }
 
             _logger?.LogInformation("Цепочка обязанностей построена");
 

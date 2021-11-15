@@ -1,4 +1,4 @@
-﻿using BotFramework.Handlers.Interfaces;
+﻿using BotFramework.Abstractions;
 
 namespace BotFramework.Extensions
 {

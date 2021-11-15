@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BotFramework.Handlers.Interfaces
+namespace BotFramework.Abstractions
 {
     /// <summary>
     /// Определяет обработчик запроса

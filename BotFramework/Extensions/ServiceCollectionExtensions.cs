@@ -1,13 +1,12 @@
 ﻿using BotFramework.Handlers.Branches;
-using BotFramework.Handlers.Interfaces;
 using BotFramework.Handlers.StepHandler;
-using BotFramework.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
+using BotFramework.Abstractions;
 
 namespace BotFramework.Extensions
 {
@@ -53,28 +52,11 @@ namespace BotFramework.Extensions
         public static IServiceCollection AddHandler<TRequestHandler>(this IServiceCollection services)
             where TRequestHandler : IRequestHandler
         {
-            if (typeof(TRequestHandler).GetInterface(nameof(ICommandHandler)) == typeof(ICommandHandler))
-            {
-                services.TryAddTransient
-                (
-                    typeof(IRequestHandler),
-                    typeof(TRequestHandler)
-                );
-            }
-            else
-            {
-                services.TryAddTransient
-                (
-                    typeof(ICommandHandler),
-                    typeof(TRequestHandler)
-                );
-            }
-
             services.TryAddTransient
-                (
-                    typeof(TRequestHandler),
-                    typeof(TRequestHandler)
-                );
+            (
+                typeof(TRequestHandler),
+                typeof(TRequestHandler)
+            );
 
             return services;
         }

@@ -1,9 +1,9 @@
-﻿using BotFramework.Handlers.Interfaces;
-using BotFramework.Handlers.StepHandler;
-using BotFramework.Interfaces;
+﻿using BotFramework.Handlers.StepHandler;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using BotFramework.Abstractions;
+using BotFramework.Handlers.Branches;
 
 namespace BotFramework.Extensions
 {
@@ -12,6 +12,20 @@ namespace BotFramework.Extensions
     /// </summary>
     public static class BranchBuilderExtensions
     {
+        /// <summary>
+        /// Создает и конфигирирует вложенную ветвь обработчиков
+        /// </summary>
+        /// <param name="builder">Текущая цепочка обработчиков</param>
+        /// <param name="configure">Конфигурация для добавляемой ветви</param>
+        internal static IBranchBuilder CreateAnotherBranch(this IBranchBuilder builder, Action<IBranchBuilder> configure)
+        {
+            var anotherBranchBuilder = builder.ServiceProvider.GetRequiredService<IBranchBuilder>();
+            
+            configure(anotherBranchBuilder);
+
+            return anotherBranchBuilder;
+        }
+        
         /// <summary>
         /// Добавляет в цепочку обработчик запроса по заданному <see cref="IRequestHandler"/> и возвращает текущий экземпляр построителя цепочки обязанностей
         /// </summary>
@@ -24,6 +38,27 @@ namespace BotFramework.Extensions
             return builder.UseHandler
             (
                 builder.ServiceProvider.GetRequiredService<TRequestHandler>()
+            );
+        }
+
+        /// <summary>
+        /// Добавляет в цепочку отдельную ветвь и возвращает текущий экземпляр построителя цепочки обязанностей
+        /// </summary>
+        /// <param name="builder">Построитель цепочки обязанностей</param>
+        /// <param name="predicate">Условие, при котором происходит переход к добавляемой ветви при обработке запроса</param>
+        /// <param name="configure">Конфигурация для добавляемой ветви</param>
+        /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
+        public static IBranchBuilder UseAnotherBranch(this IBranchBuilder builder, Predicate<object> predicate, Action<IBranchBuilder> configure)
+        {
+            var anotherBranch = builder.CreateAnotherBranch(configure)
+                                       .Build();
+            
+            var internalHandlerFactory = builder.ServiceProvider
+                                                .GetRequiredService<Func<RequestDelegate, Predicate<object>, InternalHandler>>();
+
+            return builder.UseHandler
+            (
+                internalHandlerFactory(anotherBranch, predicate)
             );
         }
 
@@ -83,10 +118,10 @@ namespace BotFramework.Extensions
         /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
         public static IBranchBuilder UseStepHandler(this IBranchBuilder builder, ICommandHandler commandHandler, Action<IBranchBuilder> configure)
         {
-            var anotherBranchBuilder = builder.ServiceProvider.GetRequiredService<IBranchBuilder>();
-            configure(anotherBranchBuilder);
+            var anotherBranchBuilder = builder.CreateAnotherBranch(configure);
             
-            var transitionHandlerFactory = builder.ServiceProvider.GetRequiredService<Func<ICommandHandler, IReadOnlyCollection<IRequestHandler>, TransitionHandler>>();
+            var transitionHandlerFactory = builder.ServiceProvider
+                                                  .GetRequiredService<Func<ICommandHandler, IReadOnlyCollection<IRequestHandler>, TransitionHandler>>();
 
             return builder.UseCommand
             (
