@@ -11,7 +11,7 @@ namespace BotFramework
     /// <summary>
     /// Стандартная реализация для <see cref="IBranchBuilder"/>
     /// </summary>
-    internal class BranchBuilder : IBranchBuilder
+    public class BranchBuilder : IBranchBuilder
     {
         private readonly ILogger<BranchBuilder> _logger;
         private readonly Stack<IRequestHandler> _handlers;
