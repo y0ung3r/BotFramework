@@ -56,12 +56,8 @@ namespace BotFramework.Extensions
         /// <returns>Значение "True" - является, а "False" - не является</returns>
         public static bool TextIsCommandAlias(this ICommandHandler commandHandler, string message)
         {
-            var aliases = commandHandler.GetCommandAliases();
-            
-            return aliases.Any
-            (
-                pattern => Regex.IsMatch(message, $@"^$|\{pattern}")
-            );
+            return commandHandler.GetCommandAliases()
+                                 .Any(message.Equals);
         }
     }
 }

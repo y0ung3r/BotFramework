@@ -76,6 +76,20 @@ namespace BotFramework.Tests.Handlers
         }
 
         [Test]
+        public void Test_is_empty()
+        {
+            // Arrange
+            var sut = new FakeCommandHandler();
+            
+            // Act
+            var isCommandAlias = sut.TextIsCommandAlias(string.Empty);
+
+            // Assert
+            isCommandAlias.Should()
+                          .BeFalse();
+        }
+        
+        [Test]
         public void Text_is_command_alias()
         {
             // Arrange

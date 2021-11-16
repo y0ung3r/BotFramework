@@ -7,7 +7,7 @@ using BotFramework.Abstractions;
 namespace BotFramework.Handlers.StepHandler
 {
     /// <summary>
-    /// Представляет обработчик переходов
+    /// Представляет обработчик пошаговых переходов
     /// </summary>
     internal sealed class TransitionHandler : ICommandHandler
     {
