@@ -9,8 +9,10 @@
     <RepositoryUrl>https://github.com/y0ung3r/BotFramework</RepositoryUrl>
     <PackageId>BotFramework.NET</PackageId>
     <Product>BotFramework</Product>
-    <PackageTags>.NET, Bot</PackageTags>
+    <PackageTags>.net;bot;bot-framework;botframework;framework</PackageTags>
     <PackageProjectUrl>https://github.com/y0ung3r/BotFramework</PackageProjectUrl>
+    <PackageVersion>2.1.1</PackageVersion>
+    <PackageLicenseFile>LICENCE</PackageLicenseFile>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -44,4 +46,8 @@
     </AssemblyAttribute>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\LICENCE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  
 </Project>
