@@ -35,7 +35,7 @@ branchBuilder.UseHandler<ExceptionHandler>()
              .UseCommand<SendCommand>()
              .UseHandler<MissingRequestHandler>();
 ```
-Метод **UseHandler()** добавляет обработчик в цепочку. **UseCommand()** добавляет команду в обработчик. По сути, команда и есть обработчик, а их отличие в том, что команда вызывается только при соблюдении определенных условий, описанных в реализации этой команды (например, запрос содержит текстовую команду). Также существует метод **UseAnotherBranch()**, которая конфигурирует вложенную цепочку обработчиков. Пример ниже конфигурирует цепочку обработчиков таким образом, чтобы при получении сообщения с текстовой командой и видео, запускался механизм проверки формата ролика в **CheckVideoFormatHandler**, а затем выполнений действий по обработке в **ProcessVideoCommand**:
+Метод **UseHandler()** добавляет обработчик в цепочку. **UseCommand()** добавляет команду в обработчик. По сути, команда и есть обработчик, а их отличие в том, что команда вызывается только при соблюдении определенных условий, описанных в реализации этой команды (например, запрос содержит текстовую команду). Также существует метод **UseAnotherBranch()**, которая конфигурирует вложенную цепочку обработчиков. Пример ниже конфигурирует цепочку обработчиков таким образом, чтобы при получении сообщения с текстовой командой и видео, запускался механизм проверки формата ролика в **CheckVideoFormatHandler**, а затем выполнений действий по обработке в **ProcessVideoHandler**:
 ```csharp
 branchBuilder.UseHandler<ExceptionHandler>()
              .UseAnotherBranch
@@ -44,7 +44,7 @@ branchBuilder.UseHandler<ExceptionHandler>()
                  anotherBranchBuilder => 
                  {
                      anotherBranchBuilder.UseHandler<CheckVideoFormatHandler>()
-                                         .UseCommand<ProcessVideoCommand>();
+                                         .UseHandler<ProcessVideoHandler>();
                  }
              )
              .UseCommand<HelpCommand>();
@@ -163,7 +163,36 @@ public class StartCommand : ICommandHandler
 Атрибут **CommandText** позволяет через запятую определить на какие текстовые команды будет реагировать данный обработчик. Метод **CanHandle()** определяет при каких условиях команда может быть выполнена. В примере выше, условие выполнится, если сообщение включает в себя упоминание бота и является текстовой командой, указанной в атрибуте **CommandText**.
 Команды также, как и обычные обработчики, поддерживают инъекцию зависимостей. В дополнение к классическому DI, **CanHandle()** содержит в качестве параметра **IServiceProvider**.
 
+### Создание пошаговых обработчиков
+Начиная с **v2.1.1** Вы можете конфигурировать пошаговые обработчики, используя метод **UseStepsFor()** из интерфейса **IBranchBuilder**:
+```csharp
+var branchBuilder = new BranchBuilder(serviceProvider); // или var branchBuilder = serviceProvider.GetRequiredService<IBranchBuilder>();
+
+branchBuilder.UseHandler<ExceptionHandler>()
+             .UseStepsFor<Command>(stepsBuilder => 
+             {
+                stepsBuilder.UseStepHandler<AskFirstnameHandler>()
+                            .UseStepHandler<AskLastnameHandler>();
+             });
+```
+Пошаговые обработчики можно определить только для команд. Сами по себе пошаговые обработчики являются командами, но без ссылки на следующий обработчик в цепочке. Каждый пошаговый обработчик позволяет получить запрос из предыдущего шага и ответ на него из текущего шага. Определить пошаговый обработчик можно используя абстрактный класс **StepHandlerBase<TPreviousRequest, TCurrentRequest>**:
+```csharp
+internal class AskLastnameHandler : StepHandlerBase<string, string>
+{
+    public override Task HandleAsync(string previousRequest, string currentRequest)
+    {
+        Console.WriteLine($"Имя: {previousRequest}");
+        Console.WriteLine($"Фамилия: {currentRequest}");
+            
+        return Task.CompletedTask;
+    }
+}
+```
+
 ### Создание бота
+<details>
+<summary>До v1.0.2</summary>
+
 **BotFramework** имеет абстракцию **BotBase** для того, чтобы изолировать вызовы **RequestDelegate** в одном месте. Это вовсе необязательно и вы вольны реализовывать вызовы Вашей цепочки так, как Вам хочется. Пример ниже показывает, как LongPolling-сервис вызывает **RequestDelegate** с именем **rootHandler** при получении новых обновлений от Telegram:
 ```csharp
 public class TelegramBot : BotBase
@@ -200,3 +229,12 @@ public class TelegramBot : BotBase
     }
 }
 ```
+
+</details>
+
+<details>
+<summary> Начиная с v2.1.1</summary>
+
+Абстракция **BotBase** вырезана и больше не используется
+
+</details>
