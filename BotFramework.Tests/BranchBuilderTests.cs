@@ -1,10 +1,10 @@
 ﻿using BotFramework.Extensions;
-using BotFramework.Handlers;
 using BotFramework.Tests.Fakes;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Linq;
+using BotFramework.Handlers.Common;
 
 namespace BotFramework.Tests
 {
@@ -28,14 +28,28 @@ namespace BotFramework.Tests
         }
 
         [Test]
-        public void Building_a_branch_with_the_handler()
+        public void Building_a_branch()
+        {
+            // Arrange
+            var fakeHandler = new FakeRequestHandler();
+            
+            // Act
+            var branch = _sut.UseHandler(fakeHandler)
+                             .Build();
+            
+            // Assert
+            branch.Should()
+                  .NotBeNull();
+        }
+
+        [Test]
+        public void Injecting_a_handler_in_the_branch()
         {
             // Arrange
             var requestHandler = new FakeRequestHandler();
 
             // Act
-            var requestDelegate = _sut.UseHandler(requestHandler)
-                                      .Build();
+            _sut.UseHandler(requestHandler);
 
             // Assert
             var handlers = _sut.Handlers;
@@ -45,20 +59,16 @@ namespace BotFramework.Tests
 
             handlers.Should()
                     .ContainEquivalentOf(requestHandler);
-
-            requestDelegate.Should()
-                           .NotBeNull();
         }
 
         [Test]
-        public void Building_a_branch_with_the_command()
+        public void Injecting_a_command_in_the_branch()
         {
             // Arrange
             var commandHandler = new FakeCommandHandler();
 
             // Act
-            var requestDelegate = _sut.UseCommand(commandHandler)
-                                      .Build();
+            _sut.UseCommand(commandHandler);
 
             // Assert
             var handlers = _sut.Handlers;
@@ -69,22 +79,18 @@ namespace BotFramework.Tests
             handlers.ElementAt(index: 0)
                     .Should()
                     .BeOfType<InternalHandler>();
-
-            requestDelegate.Should()
-                           .NotBeNull();
         }
 
         [Test]
-        public void Building_a_branch_with_the_handler_and_the_command()
+        public void Injecting_a_handler_and_a_command_in_the_branch()
         {
             // Arrange
             var requestHandler = new FakeRequestHandler();
             var commandHandler = new FakeCommandHandler();
 
             // Act
-            var requestDelegate = _sut.UseHandler(requestHandler)
-                                      .UseCommand(commandHandler)
-                                      .Build();
+            _sut.UseHandler(requestHandler)
+                .UseCommand(commandHandler);
 
             // Assert
             var handlers = _sut.Handlers;
@@ -99,9 +105,25 @@ namespace BotFramework.Tests
             handlers.ElementAt(index: 1)
                     .Should()
                     .BeEquivalentTo(requestHandler);
+        }
 
-            requestDelegate.Should()
-                           .NotBeNull();
+        [Test]
+        public void Injecting_a_command_step_handlers_in_the_branch()
+        {
+            // Arrange
+            var fakeCommand = new FakeCommandHandler();
+            var fakeStepHandler = new FakeStepHandler();
+
+            // Act
+            _sut.UseStepsFor(fakeCommand, stepsBuilder =>
+            {
+                stepsBuilder.UseStepHandler(fakeStepHandler);
+            });
+            
+            // Assert
+            _sut.Handlers.ElementAt(index: 0)
+                         .Should()
+                         .BeOfType<InternalHandler>();
         }
 
         [TearDown]

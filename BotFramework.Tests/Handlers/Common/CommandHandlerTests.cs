@@ -1,11 +1,11 @@
-﻿using BotFramework.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BotFramework.Extensions;
 using BotFramework.Tests.Fakes;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace BotFramework.Tests.Handlers
+namespace BotFramework.Tests.Handlers.Common
 {
     /// <summary>
     /// Тесты для <see cref="CommandHandlerExtensions"/>
@@ -75,6 +75,20 @@ namespace BotFramework.Tests.Handlers
                             );
         }
 
+        [Test]
+        public void Test_is_empty()
+        {
+            // Arrange
+            var sut = new FakeCommandHandler();
+            
+            // Act
+            var isCommandAlias = sut.TextIsCommandAlias(string.Empty);
+
+            // Assert
+            isCommandAlias.Should()
+                          .BeFalse();
+        }
+        
         [Test]
         public void Text_is_command_alias()
         {

@@ -1,22 +1,27 @@
 ﻿using BotFramework.Attributes;
-using BotFramework.Handlers.Interfaces;
-using System;
 using System.Threading.Tasks;
+using BotFramework.Handlers.Common.Interfaces;
 
 namespace BotFramework.Tests.Fakes
 {
-    [CommandText("/fake, /command")]
+    /// <summary>
+    /// Fake для <see cref="ICommandHandler"/>
+    /// </summary>
+    [CommandAliases("/fake, /command")]
     public class FakeCommandHandler : ICommandHandler
     {
-        public bool CanHandle(IServiceProvider serviceProvider, object request) => true;
-
         public Task HandleAsync(object request, RequestDelegate nextHandler) => Task.CompletedTask;
+        
+        public bool CanHandle(object request) => true;
     }
 
+    /// <summary>
+    /// Fake для <see cref="ICommandHandler"/> без использования псевдонима
+    /// </summary>
     public class FakeCommandHandlerWithoutAliases : ICommandHandler
     {
-        public bool CanHandle(IServiceProvider serviceProvider, object request) => true;
-
         public Task HandleAsync(object request, RequestDelegate nextHandler) => Task.CompletedTask;
+        
+        public bool CanHandle(object request) => true;
     }
 }

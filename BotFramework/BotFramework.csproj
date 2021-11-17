@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-    <Version>1.0.2</Version>
+    <Version>2.1.0</Version>
     <Authors>y0ung3r (Nikita Velikiy)</Authors>
     <Title>BotFramework</Title>
     <Description>Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей</Description>
     <RepositoryUrl>https://github.com/y0ung3r/BotFramework</RepositoryUrl>
     <PackageId>BotFramework.NET</PackageId>
     <Product>BotFramework</Product>
-    <PackageTags>.NET, Bot</PackageTags>
+    <PackageTags>.net;bot;bot-framework;botframework;framework</PackageTags>
     <PackageProjectUrl>https://github.com/y0ung3r/BotFramework</PackageProjectUrl>
+    <PackageVersion>2.1.1</PackageVersion>
+    <PackageLicenseFile>LICENCE</PackageLicenseFile>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -43,5 +45,5 @@
       <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-
+  
 </Project>

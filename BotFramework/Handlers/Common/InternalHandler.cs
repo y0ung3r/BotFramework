@@ -1,14 +1,14 @@
-﻿using BotFramework.Handlers.Interfaces;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using BotFramework.Handlers.Common.Interfaces;
+using Microsoft.Extensions.Logging;
 
-namespace BotFramework.Handlers
+namespace BotFramework.Handlers.Common
 {
     /// <summary>
     /// Представляет обработчик, который перенаправляет запрос из одной ветки обработчиков в другую
     /// </summary>
-    internal class InternalHandler : IRequestHandler
+    internal sealed class InternalHandler : IRequestHandler
     {
         private readonly ILogger<InternalHandler> _logger;
         private readonly RequestDelegate _branch;
@@ -36,19 +36,19 @@ namespace BotFramework.Handlers
         {
             if (_condition(request))
             {
-                _logger?.LogInformation("A request will be redirected to the branch");
+                _logger?.LogInformation("Текущий запрос перенаправляется во вложенную ветвь");
 
                 return _branch(request);
             }
 
             if (nextHandler != null) 
             {
-                _logger?.LogInformation("A request will be redirected to the next handler");
+                _logger?.LogInformation("Текущий запрос перенаправляется к следующему обработчику по цепочке");
 
                 return nextHandler(request);
             }
 
-            _logger?.LogInformation("A request is processed");
+            _logger?.LogInformation("Запрос обработан");
 
             return Task.CompletedTask;
         }
