@@ -45,9 +45,5 @@
       <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENCE" Pack="true" PackagePath="\" />
-  </ItemGroup>
   
 </Project>
