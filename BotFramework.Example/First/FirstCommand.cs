@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BotFramework.Abstractions;
 using BotFramework.Attributes;
 using BotFramework.Extensions;
 using BotFramework.Handlers;
+using BotFramework.Handlers.Common;
 
 namespace BotFramework.Example.First
 {

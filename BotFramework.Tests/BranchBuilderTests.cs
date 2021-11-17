@@ -1,10 +1,11 @@
 ﻿using BotFramework.Extensions;
-using BotFramework.Handlers.Branches;
 using BotFramework.Tests.Fakes;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Linq;
+using BotFramework.Handlers;
+using BotFramework.Handlers.Common;
 
 namespace BotFramework.Tests
 {

@@ -1,6 +1,6 @@
 ﻿using Moq.AutoMock;
 
-namespace BotFramework.Tests.Handlers
+namespace BotFramework.Tests.Handlers.StepHandlers
 {
     /// <summary>
     /// Тесты для <see cref="TransitionHandler"/>

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BotFramework.Abstractions;
+using BotFramework.Handlers.StepHandlers;
 
 namespace BotFramework.Example.First
 {
-    internal class EndHandler : RequestHandlerBase<string>
+    internal class EndHandler : StepHandlerBase<string, string>
     {
-        public override Task HandleAsync(string request, RequestDelegate nextHandler)
+        public override Task HandleAsync(string previousRequest, string currentRequest)
         {
-            Console.WriteLine($"Вы ввели текст: {request}");
+            Console.WriteLine($"Текст с предыдущего шага: {previousRequest}");
+            Console.WriteLine($"Вы ввели текст: {currentRequest}");
             Console.WriteLine("Конец команды /first");
 
             return Task.CompletedTask;

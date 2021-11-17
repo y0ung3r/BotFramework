@@ -1,12 +1,14 @@
-﻿using BotFramework.Handlers.Branches;
-using BotFramework.Handlers.StepHandler;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
-using BotFramework.Abstractions;
+using BotFramework.Handlers.Common;
+using BotFramework.Handlers.Common.Interfaces;
+using BotFramework.Handlers.StepHandlers;
+using BotFramework.Handlers.StepHandlers.Interfaces;
+using BotFramework.Interfaces;
 
 namespace BotFramework.Extensions
 {
@@ -35,7 +37,7 @@ namespace BotFramework.Extensions
                 serviceProvider => (branch, predicate) => ActivatorUtilities.CreateInstance<InternalHandler>(serviceProvider, branch, predicate)
             );
 
-            services.TryAddTransient<Func<ICommandHandler, IReadOnlyCollection<IRequestHandler>, TransitionHandler>>
+            services.TryAddTransient<Func<ICommandHandler, IReadOnlyCollection<IStepHandler>, TransitionHandler>>
             (
                 serviceProvider => (head, handlers) => ActivatorUtilities.CreateInstance<TransitionHandler>(serviceProvider, head, handlers)
             );

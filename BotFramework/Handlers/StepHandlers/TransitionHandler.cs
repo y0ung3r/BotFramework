@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BotFramework.Abstractions;
+using BotFramework.Handlers.Common.Interfaces;
+using BotFramework.Handlers.StepHandlers.Interfaces;
+using Microsoft.Extensions.Logging;
 
-namespace BotFramework.Handlers.StepHandler
+namespace BotFramework.Handlers.StepHandlers
 {
     /// <summary>
     /// Представляет обработчик пошаговых переходов
@@ -13,8 +14,9 @@ namespace BotFramework.Handlers.StepHandler
     {
         private readonly ILogger<TransitionHandler> _logger;
         private readonly ICommandHandler _head;
-        private readonly IReadOnlyCollection<IRequestHandler> _source;
-        private readonly Stack<IRequestHandler> _handlersToExecute;
+        private readonly IReadOnlyCollection<IStepHandler> _source;
+        private readonly Stack<IStepHandler> _handlersToExecute;
+        private object _previousRequest;
 
         /// <summary>
         /// Показывает запущен ли текущий пошаговый обработчик
@@ -27,12 +29,12 @@ namespace BotFramework.Handlers.StepHandler
         /// <param name="logger">Сервис логгирования</param>
         /// <param name="head">Команда, которая запускает пошаговый обработчик</param>
         /// <param name="handlers">Обработчики, который необходимо выполнять пошагово</param>        
-        public TransitionHandler(ILogger<TransitionHandler> logger, ICommandHandler head, IReadOnlyCollection<IRequestHandler> handlers)
+        public TransitionHandler(ILogger<TransitionHandler> logger, ICommandHandler head, IReadOnlyCollection<IStepHandler> handlers)
         {
             _logger = logger;
             _head = head;
             _source = handlers;
-            _handlersToExecute = new Stack<IRequestHandler>();
+            _handlersToExecute = new Stack<IStepHandler>();
         }
 
         /// <summary>
@@ -40,24 +42,30 @@ namespace BotFramework.Handlers.StepHandler
         /// </summary>
         /// <param name="request">Запрос</param>
         /// <param name="nextHandler">Следующий обработчик по цепочке</param>
-        public Task HandleAsync(object request, RequestDelegate nextHandler)
+        public async Task HandleAsync(object request, RequestDelegate nextHandler)
         {
             if (!IsRunning)
             {
                 _logger?.LogInformation("Запуск пошагового обработчика и передача в него текущего запроса");
 
+                _previousRequest = null;
+                
                 foreach (var handler in _source)
                 {
                     _handlersToExecute.Push(handler);
                 }
 
-                return _head.HandleAsync(request, nextHandler);
+                await _head.HandleAsync(request, nextHandler);
             }
+            else
+            {
+                _logger?.LogInformation("Текущий запрос перенаправляется в активный пошаговый обработчик");
 
-            _logger?.LogInformation("Текущий запрос перенаправляется в активный пошаговый обработчик");
-
-            return _handlersToExecute.Pop()
-                                     .HandleAsync(request, nextHandler);
+                var currentHandler = _handlersToExecute.Pop();
+                await currentHandler.HandleAsync(_previousRequest, request);
+            }
+            
+            _previousRequest = request;
         }
 
         /// <summary>

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using BotFramework.Handlers.Common.Interfaces;
 
-namespace BotFramework.Abstractions
+namespace BotFramework.Interfaces
 {
     /// <summary>
     /// Определяет построитель цепочки обязанностей для бота

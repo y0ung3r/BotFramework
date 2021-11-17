@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BotFramework.Abstractions;
 using BotFramework.Handlers;
+using BotFramework.Handlers.Common;
 
 namespace BotFramework.Example.Common
 {

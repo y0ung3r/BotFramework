@@ -1,4 +1,4 @@
-﻿namespace BotFramework.Abstractions
+﻿namespace BotFramework.Handlers.Common.Interfaces
 {
     /// <summary>
     /// Определяет обработчик команды

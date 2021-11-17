@@ -2,10 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using BotFramework.Abstractions;
 using BotFramework.Example.Common;
 using BotFramework.Example.First;
 using BotFramework.Example.Second;
+using BotFramework.Interfaces;
 
 namespace BotFramework.Example
 {
@@ -17,19 +17,23 @@ namespace BotFramework.Example
 
             services.AddBotFramework()
                     .AddHandler<MissingRequestHandler>()
-                    .AddHandler<SecondCommand>()
                     .AddHandler<FirstCommand>()
                     .AddHandler<StartHandler>()
-                    .AddHandler<EndHandler>();
+                    .AddHandler<EndHandler>()
+                    .AddHandler<SecondCommand>()
+                    .AddHandler<SingleHandler>();
 
             var serviceProvider = services.BuildServiceProvider();
             var branchBuilder = serviceProvider.GetRequiredService<IBranchBuilder>();
 
-            branchBuilder.UseCommand<SecondCommand>()
-                         .UseStepHandler<FirstCommand>(stepHandlerBuilder =>
+            branchBuilder.UseStepsFor<FirstCommand>(stepsBuilder =>
                          {
-                             stepHandlerBuilder.UseHandler<StartHandler>()
-                                               .UseHandler<EndHandler>();
+                             stepsBuilder.UseStepHandler<StartHandler>()
+                                         .UseStepHandler<EndHandler>();
+                         })
+                         .UseStepsFor<SecondCommand>(stepsBuilder =>
+                         {
+                             stepsBuilder.UseStepHandler<SingleHandler>();
                          })
                          .UseHandler<MissingRequestHandler>();
 

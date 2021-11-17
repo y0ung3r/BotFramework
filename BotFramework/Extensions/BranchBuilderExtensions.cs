@@ -1,9 +1,12 @@
-﻿using BotFramework.Handlers.StepHandler;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using BotFramework.Abstractions;
-using BotFramework.Handlers.Branches;
+using System.Linq;
+using BotFramework.Handlers.Common;
+using BotFramework.Handlers.Common.Interfaces;
+using BotFramework.Handlers.StepHandlers;
+using BotFramework.Handlers.StepHandlers.Interfaces;
+using BotFramework.Interfaces;
 
 namespace BotFramework.Extensions
 {
@@ -50,11 +53,10 @@ namespace BotFramework.Extensions
         /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
         public static IBranchBuilder UseAnotherBranch(this IBranchBuilder builder, Predicate<object> predicate, Action<IBranchBuilder> configure)
         {
-            var anotherBranch = builder.CreateAnotherBranch(configure)
-                                       .Build();
-            
-            var internalHandlerFactory = builder.ServiceProvider
-                                                .GetRequiredService<Func<RequestDelegate, Predicate<object>, InternalHandler>>();
+            var serviceProvider = builder.ServiceProvider;
+            var anotherBranchBuilder = builder.CreateAnotherBranch(configure);
+            var anotherBranch = anotherBranchBuilder.Build();
+            var internalHandlerFactory = serviceProvider.GetRequiredService<Func<RequestDelegate, Predicate<object>, InternalHandler>>();
 
             return builder.UseHandler
             (
@@ -110,36 +112,43 @@ namespace BotFramework.Extensions
         }
 
         /// <summary>
-        /// Добавляет пошаговый обработчик в цепочку обработчиков
+        /// Добавляет пошаговые обработчики для команды в цепочку обработчиков
         /// </summary>
         /// <param name="builder">Построитель цепочки обязанностей</param>
         /// <param name="commandHandler">Обработчик команды, который должен пошагового обрабатываться</param>
         /// <param name="configure">Конфигурация</param>
         /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
-        public static IBranchBuilder UseStepHandler(this IBranchBuilder builder, ICommandHandler commandHandler, Action<IBranchBuilder> configure)
+        public static IBranchBuilder UseStepsFor(this IBranchBuilder builder, ICommandHandler commandHandler, Action<IStepsBuilder> configure)
         {
-            var anotherBranchBuilder = builder.CreateAnotherBranch(configure);
+            var serviceProvider = builder.ServiceProvider;
+            var anotherBranchBuilder = builder.CreateAnotherBranch
+            (
+                branchBuilder => configure(branchBuilder as IStepsBuilder)
+            );
             
-            var transitionHandlerFactory = builder.ServiceProvider
-                                                  .GetRequiredService<Func<ICommandHandler, IReadOnlyCollection<IRequestHandler>, TransitionHandler>>();
+            var transitionHandlerFactory = serviceProvider.GetRequiredService<Func<ICommandHandler, IReadOnlyCollection<IStepHandler>, TransitionHandler>>();
+            var stepHandlers = anotherBranchBuilder.Handlers
+                                                   .Cast<IStepHandler>()
+                                                   .ToList()
+                                                   .AsReadOnly();
 
             return builder.UseCommand
             (
-                transitionHandlerFactory(commandHandler, anotherBranchBuilder.Handlers)
+                transitionHandlerFactory(commandHandler, stepHandlers)
             );
         }
 
         /// <summary>
-        /// Добавляет пошаговый обработчик с указанным типом в цепочку обработчиков
+        /// Добавляет пошаговые обработчики для команды с указанным типом в цепочку обработчиков
         /// </summary>
         /// <typeparam name="TCommandHandler">Тип обработчик команды, который должен пошагового обрабатываться</typeparam>
         /// <param name="builder">Построитель цепочки обязанностей</param>
         /// <param name="configure">Конфигурация</param>
         /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
-        public static IBranchBuilder UseStepHandler<TCommandHandler>(this IBranchBuilder builder, Action<IBranchBuilder> configure)
+        public static IBranchBuilder UseStepsFor<TCommandHandler>(this IBranchBuilder builder, Action<IStepsBuilder> configure)
             where TCommandHandler : ICommandHandler
         {
-            return builder.UseStepHandler
+            return builder.UseStepsFor
             (
                 builder.ServiceProvider.GetRequiredService<TCommandHandler>(),
                 configure

@@ -4,14 +4,16 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BotFramework.Abstractions;
+using BotFramework.Handlers.Common.Interfaces;
+using BotFramework.Handlers.StepHandlers.Interfaces;
+using BotFramework.Interfaces;
 
 namespace BotFramework
 {
     /// <summary>
     /// Стандартная реализация для <see cref="IBranchBuilder"/>
     /// </summary>
-    public class BranchBuilder : IBranchBuilder
+    public class BranchBuilder : IBranchBuilder, IStepsBuilder
     {
         private readonly ILogger<BranchBuilder> _logger;
         private readonly Stack<IRequestHandler> _handlers;
@@ -60,6 +62,15 @@ namespace BotFramework
             _logger?.LogInformation("Обработчик запроса добавлен в цепочку");
 
             return this;
+        }
+        
+        /// <summary>
+        /// Добавляет пошаговый обработчик в цепочку
+        /// </summary>
+        /// <param name="handler">Пошаговый обработчик</param>
+        public IStepsBuilder UseStepHandler(IStepHandler handler)
+        {
+            return UseHandler(handler) as IStepsBuilder;
         }
 
         /// <summary>

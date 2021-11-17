@@ -1,11 +1,11 @@
-﻿using BotFramework.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BotFramework.Extensions;
 using BotFramework.Tests.Fakes;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace BotFramework.Tests.Handlers
+namespace BotFramework.Tests.Handlers.Common
 {
     /// <summary>
     /// Тесты для <see cref="CommandHandlerExtensions"/>

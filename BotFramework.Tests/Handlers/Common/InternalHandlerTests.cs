@@ -1,13 +1,13 @@
-﻿using BotFramework.Extensions;
-using BotFramework.Handlers.Branches;
+﻿using System;
+using BotFramework.Extensions;
+using BotFramework.Handlers.Common;
+using BotFramework.Handlers.Common.Interfaces;
 using BotFramework.Tests.Fakes;
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
-using System;
-using BotFramework.Abstractions;
 
-namespace BotFramework.Tests.Handlers
+namespace BotFramework.Tests.Handlers.Common
 {
     /// <summary>
     /// Тесты для <see cref="InternalHandler" />
