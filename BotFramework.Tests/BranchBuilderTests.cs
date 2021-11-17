@@ -43,7 +43,7 @@ namespace BotFramework.Tests
         }
 
         [Test]
-        public void Building_a_branch_with_the_handler()
+        public void Injecting_a_handler_in_the_branch()
         {
             // Arrange
             var requestHandler = new FakeRequestHandler();
@@ -62,7 +62,7 @@ namespace BotFramework.Tests
         }
 
         [Test]
-        public void Building_a_branch_with_the_command()
+        public void Injecting_a_command_in_the_branch()
         {
             // Arrange
             var commandHandler = new FakeCommandHandler();
@@ -82,7 +82,7 @@ namespace BotFramework.Tests
         }
 
         [Test]
-        public void Building_a_branch_with_the_handler_and_the_command()
+        public void Injecting_a_handler_and_a_command_in_the_branch()
         {
             // Arrange
             var requestHandler = new FakeRequestHandler();
@@ -108,7 +108,7 @@ namespace BotFramework.Tests
         }
 
         [Test]
-        public void Building_a_branch_with_the_step_handlers()
+        public void Injecting_a_command_step_handlers_in_the_branch()
         {
             // Arrange
             var fakeCommand = new FakeCommandHandler();
