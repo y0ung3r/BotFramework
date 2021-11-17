@@ -19,7 +19,7 @@ namespace BotFramework.Handlers.StepHandlers
         private object _previousRequest;
 
         /// <summary>
-        /// Показывает запущен ли текущий пошаговый обработчик
+        /// Показывает запущен ли текущий обработчик пошаговых переходов
         /// </summary>
         public bool IsRunning => _handlersToExecute.Any();
 
@@ -27,7 +27,7 @@ namespace BotFramework.Handlers.StepHandlers
         /// Базовый конструктор
         /// </summary>
         /// <param name="logger">Сервис логгирования</param>
-        /// <param name="head">Команда, которая запускает пошаговый обработчик</param>
+        /// <param name="head">Команда, которая запускает пошаговые обработчики</param>
         /// <param name="handlers">Обработчики, который необходимо выполнять пошагово</param>        
         public TransitionHandler(ILogger<TransitionHandler> logger, ICommandHandler head, IReadOnlyCollection<IStepHandler> handlers)
         {
@@ -69,12 +69,14 @@ namespace BotFramework.Handlers.StepHandlers
         }
 
         /// <summary>
-        /// Проверяет может ли пошаговый обработчик быть запущен
+        /// Проверяет могут ли пошаговые обработчики быть запущены
         /// </summary>
         /// <param name="request">Запрос</param>
         public bool CanHandle(object request)
         {
-            return _head.CanHandle(request) || IsRunning;
+            var currentHandler = _handlersToExecute.Peek();
+            
+            return _head.CanHandle(request) || IsRunning && currentHandler.CanHandle(_previousRequest, request);
         }
     }
 }
