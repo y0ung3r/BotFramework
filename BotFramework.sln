@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotFramework", "BotFramework\BotFramework.csproj", "{D8C3EE0F-4FEE-435E-A8DB-0A3FA6C2C00F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotFramework", "BotFramework\BotFramework.csproj", "{D8C3EE0F-4FEE-435E-A8DB-0A3FA6C2C00F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotFramework.Tests", "BotFramework.Tests\BotFramework.Tests.csproj", "{3D383E68-3D0A-4986-B618-013D29B271EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotFramework.Tests", "BotFramework.Tests\BotFramework.Tests.csproj", "{3D383E68-3D0A-4986-B618-013D29B271EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotFramework.Example", "BotFramework.Example\BotFramework.Example.csproj", "{037A16C5-E70D-47D9-B77C-C26BE36B4E44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3D383E68-3D0A-4986-B618-013D29B271EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D383E68-3D0A-4986-B618-013D29B271EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D383E68-3D0A-4986-B618-013D29B271EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{037A16C5-E70D-47D9-B77C-C26BE36B4E44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{037A16C5-E70D-47D9-B77C-C26BE36B4E44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{037A16C5-E70D-47D9-B77C-C26BE36B4E44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{037A16C5-E70D-47D9-B77C-C26BE36B4E44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,13 +1,13 @@
-﻿using BotFramework.Extensions;
-using BotFramework.Handlers;
-using BotFramework.Handlers.Interfaces;
+﻿using System;
+using BotFramework.Extensions;
+using BotFramework.Handlers.Common;
+using BotFramework.Handlers.Common.Interfaces;
 using BotFramework.Tests.Fakes;
 using Moq;
 using Moq.AutoMock;
 using NUnit.Framework;
-using System;
 
-namespace BotFramework.Tests.Handlers
+namespace BotFramework.Tests.Handlers.Common
 {
     /// <summary>
     /// Тесты для <see cref="InternalHandler" />
@@ -41,7 +41,7 @@ namespace BotFramework.Tests.Handlers
 
             _mocker.Setup<RequestDelegate>
             (
-                requestDelegate => requestDelegate
+                @delegate => @delegate
                 (
                     It.IsAny<object>()
                 )
@@ -54,7 +54,7 @@ namespace BotFramework.Tests.Handlers
         public void Successfully_processing_of_the_request()
         {
             // Arrange
-            var sut = CreateInternalHandler<FakeRequestHandler>(request => true);
+            var sut = CreateInternalHandler<FakeRequestHandler>(_ => true);
 
             // Act
             sut.HandleAsync
@@ -78,7 +78,7 @@ namespace BotFramework.Tests.Handlers
         public void Successfully_processing_of_the_command()
         {
             // Arrange
-            var sut = CreateInternalHandler<FakeCommandHandler>(request => true);
+            var sut = CreateInternalHandler<FakeCommandHandler>(_ => true);
 
             // Act
             sut.HandleAsync
@@ -102,7 +102,7 @@ namespace BotFramework.Tests.Handlers
         public void Predicate_returns_false()
         {
             // Arrange
-            var sut = CreateInternalHandler<FakeCommandHandler>(request => false);
+            var sut = CreateInternalHandler<FakeCommandHandler>(_ => false);
 
             // Act
             sut.HandleAsync

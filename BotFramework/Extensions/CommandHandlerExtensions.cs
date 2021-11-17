@@ -1,8 +1,8 @@
 ﻿using BotFramework.Attributes;
-using BotFramework.Handlers.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BotFramework.Handlers.Common.Interfaces;
 
 namespace BotFramework.Extensions
 {
@@ -16,14 +16,14 @@ namespace BotFramework.Extensions
         /// </summary>
         /// <param name="commandHandler">Команда</param>
         /// <returns>Атрибут команды</returns>
-        internal static CommandTextAttribute GetCommandAttribute(this ICommandHandler commandHandler)
+        internal static CommandAliasesAttribute GetCommandAttribute(this ICommandHandler commandHandler)
         {
             var handlerAttribute = commandHandler.GetType()
                                                  .GetCustomAttributes(inherit: false)
                                                  .ToList()
-                                                 .FirstOrDefault(attribute => attribute is CommandTextAttribute);
+                                                 .FirstOrDefault(attribute => attribute is CommandAliasesAttribute);
 
-            return handlerAttribute as CommandTextAttribute;
+            return handlerAttribute as CommandAliasesAttribute;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace BotFramework.Extensions
         public static IEnumerable<string> GetCommandAliases(this ICommandHandler commandHandler)
         {
             var commandAttribute = commandHandler.GetCommandAttribute();
-            var commandText = commandAttribute?.CommandText;
+            var commandText = commandAttribute?.CommandAliases;
 
             if (string.IsNullOrWhiteSpace(commandText))
             {
@@ -56,13 +56,8 @@ namespace BotFramework.Extensions
         /// <returns>Значение "True" - является, а "False" - не является</returns>
         public static bool TextIsCommandAlias(this ICommandHandler commandHandler, string message)
         {
-            var commandAliases = commandHandler.GetCommandAliases();
-
             return commandHandler.GetCommandAliases()
-                                 .Any
-                                 (
-                                     pattern => Regex.IsMatch(message, $@"^$|\{pattern}")
-                                 );
+                                 .Any(message.Equals);
         }
     }
 }
