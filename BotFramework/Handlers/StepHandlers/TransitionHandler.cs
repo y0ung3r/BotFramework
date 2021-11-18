@@ -74,9 +74,13 @@ namespace BotFramework.Handlers.StepHandlers
         /// <param name="request">Запрос</param>
         public bool CanHandle(object request)
         {
+            if (!IsRunning)
+            {
+                return _head.CanHandle(request);
+            }
+
             var currentHandler = _handlersToExecute.Peek();
-            
-            return _head.CanHandle(request) || IsRunning && currentHandler.CanHandle(_previousRequest, request);
+            return currentHandler.CanHandle(_previousRequest, request);
         }
     }
 }
