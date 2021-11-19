@@ -1,10 +1,10 @@
-﻿using BotFramework.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using BotFramework.Handlers.Common.Interfaces;
+using BotFramework.Handlers.Extensions;
 using BotFramework.Handlers.StepHandlers.Interfaces;
 using BotFramework.Interfaces;
 

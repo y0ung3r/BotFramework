@@ -1,6 +1,6 @@
 ﻿using BotFramework.Handlers.Common.Interfaces;
 
-namespace BotFramework.Extensions
+namespace BotFramework.Handlers.Extensions
 {
     /// <summary>
     /// Методы-расширения для <see cref="IRequestHandler"/>

@@ -38,6 +38,37 @@ namespace BotFramework.Handlers.StepHandlers
         }
 
         /// <summary>
+        /// Выполняет команду, которая запускает пошаговые обработчики
+        /// </summary>
+        /// <param name="request">Запрос</param>
+        /// <param name="nextHandler">Следующий обработчик по цепочке</param>
+        private Task HandleHeadAsync(object request, RequestDelegate nextHandler)
+        {
+            _logger?.LogInformation("Запуск пошагового обработчика и передача в него текущего запроса");
+
+            _previousRequest = null;
+                
+            foreach (var handler in _source)
+            {
+                _handlersToExecute.Push(handler);
+            }
+
+            return _head.HandleAsync(request, nextHandler);
+        }
+
+        /// <summary>
+        /// Обрабатывает следующий пошаговый обработчик
+        /// </summary>
+        /// <param name="request">Запрос</param>
+        private Task HandleStepAsync(object request)
+        {
+            _logger?.LogInformation("Текущий запрос перенаправляется в активный пошаговый обработчик");
+
+            return _handlersToExecute.Pop()
+                                     .HandleAsync(_previousRequest, request);
+        }
+
+        /// <summary>
         /// Обработать запрос
         /// </summary>
         /// <param name="request">Запрос</param>
@@ -46,23 +77,11 @@ namespace BotFramework.Handlers.StepHandlers
         {
             if (!IsRunning)
             {
-                _logger?.LogInformation("Запуск пошагового обработчика и передача в него текущего запроса");
-
-                _previousRequest = null;
-                
-                foreach (var handler in _source)
-                {
-                    _handlersToExecute.Push(handler);
-                }
-
-                await _head.HandleAsync(request, nextHandler);
+                await HandleHeadAsync(request, nextHandler);
             }
             else
             {
-                _logger?.LogInformation("Текущий запрос перенаправляется в активный пошаговый обработчик");
-
-                var currentHandler = _handlersToExecute.Pop();
-                await currentHandler.HandleAsync(_previousRequest, request);
+                await HandleStepAsync(request);
             }
             
             _previousRequest = request;
@@ -79,8 +98,8 @@ namespace BotFramework.Handlers.StepHandlers
                 return _head.CanHandle(request);
             }
 
-            var currentHandler = _handlersToExecute.Peek();
-            return currentHandler.CanHandle(_previousRequest, request);
+            return _handlersToExecute.Peek()
+                                     .CanHandle(_previousRequest, request);
         }
     }
 }
