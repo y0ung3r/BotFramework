@@ -6,10 +6,26 @@
 
 Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей
 
-# Использование
+## Возможности
+* **Построение цепочек обработчиков под любые задачи:**
+  * Простые обработчики;
+  * Команды, выполняемые по условию;
+  * Вложенные цепочки простых обработчиков и команд, выполняемые по условию;
+  * Обработчики для пошаговой обработки команд.
+* **Запуск цепочки обработчиков из любого места в приложении;**
+* **Работа с расширяемыми абстракциями, предназначенные для реализации поддерживаемой логики обработчиков:**
+  * Создавайте собственные обертки над обработчиками;
+  * Указывайте типы запросов с помощью обобщений.
+* **Поддержка псевдонимов для обработчиков команд:**
+  * Определяйте любое количество текстовых команд (псевдонимов) для своих обработчиков;
+  * Используйте методы-расширения из **BotFramework** для проверки соответствия между введенной пользователем командой и заданным Вами списком псевдонимов.
+* **Совместимость с `Microsoft.Extensions.Logging` и `Microsoft.Extensions.DependencyInjection`**;
+* **Поддержка Dependency Injection в обработчиках**.
+
+## Начало работы
 *Все примеры ниже оформлены с использованием [Telegram.Bot](https://github.com/TelegramBots/Telegram.Bot)*
 ### Регистрация зависимостей
-Перед началом работы зарегистрируйте зависимости и создайте **ServiceProvider**:
+Перед началом работы зарегистрируйте зависимости и создайте `ServiceProvider`:
 ```csharp
 var services = new ServiceCollection();
 
@@ -23,19 +39,24 @@ services.AddBotFramework()
        
 var serviceProvider = services.BuildServiceProvider();
 ```
-Метод **AddBotFramework()** добавляет основные классы фреймворка в контейнер зависимостей. **AddHandler()** регистрирует обработчик запроса указанного типа.
+Метод `AddBotFramework()` добавляет основные классы фреймворка в контейнер зависимостей. `AddHandler()` регистрирует обработчик запроса указанного типа.
 
 ### Конфигурация цепочки обработчиков
-Как только все зависимости будут зарегистрированы, используйте **BranchBuilder**, чтобы сконфигурировать цепочку обработчиков:
+Как только все зависимости будут зарегистрированы, используйте `BranchBuilder`, чтобы сконфигурировать цепочку обработчиков:
 ```csharp
 var branchBuilder = new BranchBuilder(serviceProvider); // или var branchBuilder = serviceProvider.GetRequiredService<IBranchBuilder>();
 
 branchBuilder.UseHandler<ExceptionHandler>()
              .UseCommand<HelpCommand>()
              .UseCommand<SendCommand>()
+             .UseStepsFor<GreetingCommand>(stepsBuilder => 
+             {
+                 stepsBuilder.UseStepHandler<FirstnameHandler>()
+                             .UseStepHandler<LastnameHandler>();
+             })
              .UseHandler<MissingRequestHandler>();
 ```
-Метод **UseHandler()** добавляет обработчик в цепочку. **UseCommand()** добавляет команду в обработчик. По сути, команда и есть обработчик, а их отличие в том, что команда вызывается только при соблюдении определенных условий, описанных в реализации этой команды (например, запрос содержит текстовую команду). Также существует метод **UseAnotherBranch()**, которая конфигурирует вложенную цепочку обработчиков. Пример ниже конфигурирует цепочку обработчиков таким образом, чтобы при получении сообщения с текстовой командой и видео, запускался механизм проверки формата ролика в **CheckVideoFormatHandler**, а затем выполнений действий по обработке в **ProcessVideoHandler**:
+Метод `UseHandler()` добавляет обработчик в цепочку. `UseCommand()` добавляет команду в обработчик. По сути, команда и есть обработчик, а их отличие в том, что команда вызывается только при соблюдении определенных условий, описанных в реализации этой команды (например, запрос содержит текстовую команду). `UseStepsFor()` позволяет сконфигурировать пошаговый обработчик для команды. Также существует метод `UseAnotherBranch()`, которая конфигурирует вложенную цепочку обработчиков. Пример ниже конфигурирует цепочку обработчиков таким образом, чтобы при получении сообщения с текстовой командой и видео, запускался механизм проверки формата ролика в `CheckVideoFormatHandler`, а затем выполнений действий по обработке в `ProcessVideoHandler`:
 ```csharp
 branchBuilder.UseHandler<ExceptionHandler>()
              .UseAnotherBranch
@@ -49,192 +70,9 @@ branchBuilder.UseHandler<ExceptionHandler>()
              )
              .UseCommand<HelpCommand>();
 ```
-Метод **Build()** построит готовую цепочку в виде **RequestDelegate**. Достаточно вызывать этот делегат каждый раз, когда запрос для обработки будет готов будет готов. Например, получение обновления от Telegram:
+Метод `Build()` построит готовую цепочку в виде `RequestDelegate`. Достаточно вызывать этот делегат каждый раз, когда запрос для обработки будет готов будет готов. Например, получение обновления от Telegram:
 ```csharp
 var branch = branchBuilder.Build();
 var request = GetLastUpdate(); // Пользовательский метод
 await branch(request);
 ```
-
-### Создание обработчиков
-Чтобы создать новый обработчик, реализуйте интерфейс **IRequestHandler**. Пример ниже уведомляет пользователя о том, что бот не может обработать запрос:
-```csharp
-public class MissingUpdateHandler : IRequestHandler
-{
-    private readonly ILogger<MissingUpdateHandler> _logger;
-    private readonly ITelegramBotClient _client;
-
-    public MissingUpdateHandler(ILogger<MissingUpdateHandler> logger, ITelegramBotClient client)
-    {
-        _logger = logger;
-        _client = client;
-    }
-
-    public async Task HandleAsync(object request, RequestDelegate nextHandler)
-    {
-        var update = request as Update;
-
-        if (update is not null) 
-        { 
-            _logger.LogWarning($"No handler for request with type: {update.Type}");
-            
-            if (update.CallbackQuery is CallbackQuery callbackQuery)
-            {
-                await _client.AnswerCallbackQueryAsync
-                (
-                    callbackQuery.Id,
-                    text: "Невозможно обработать Ваш запрос"
-                );
-            }
-            else if (update.GetChatId() is long chatId && update.GetChatType() is not ChatType.Group) // Пользовательские методы
-            {
-                await _client.SendTextMessageAsync
-                (
-                    chatId,
-                    text: "Некорректный запрос. Используйте /help для получения списка доступных команд"
-                );
-            }
-        }
-    }
-}
-```
-Обратите внимание, что все обработчики поддерживают инъекцию зависимостей.
-
-### Создание команд
-Чтобы создать новую команду, используйте интерфейс **ICommandHandler**. Пример ниже по команде "/help" или "/start" выводит пользователю подсказку по работе с ботом:
-```csharp
-[CommandText("/help, /start")]
-public class StartCommand : ICommandHandler
-{
-    private readonly ILogger<StartCommand> _logger;
-    private readonly ITelegramBotClient _client;
-
-    public StartCommand(ILogger<StartCommand> logger, ITelegramBotClient client)
-    {
-        _logger = logger;
-        _client = client;
-    }
-
-    public async Task HandleAsync(object request, RequestDelegate nextHandler)
-    {
-        var stringBuilder = new StringBuilder();
-
-        stringBuilder.AppendLine("<b>С помощью данного бота Вы можете: ...</b>");
-
-        var update = request as Update;
-
-        if (update is not null)
-        { 
-            var message = update.Message;
-            var chatId = message.Chat.Id;
-
-            await _client.SendChatActionAsync
-            (
-                chatId, 
-                chatAction: ChatAction.Typing
-            );
-
-            await _client.SendTextMessageAsync
-            (
-                chatId,
-                text: stringBuilder.ToString(),
-                parseMode: ParseMode.Html,
-                disableWebPagePreview: true
-            );
-
-            _logger?.LogInformation("Help/Start command processed");
-        }
-    }
-
-    public bool CanHandle(IServiceProvider serviceProvider, object request)
-    {
-        var botInfo = _client.GetMeAsync()
-                             .GetAwaiter()
-                             .GetResult();
-
-        return request is Update update &&
-               update.IsCommand() &&
-               update.Message is Message message &&
-               message.IsContainsBotMention(botInfo) &&
-               this.TextIsCommandAlias(message.Text);
-    }
-}
-```
-Атрибут **CommandText** позволяет через запятую определить на какие текстовые команды будет реагировать данный обработчик. Метод **CanHandle()** определяет при каких условиях команда может быть выполнена. В примере выше, условие выполнится, если сообщение включает в себя упоминание бота и является текстовой командой, указанной в атрибуте **CommandText**.
-Команды также, как и обычные обработчики, поддерживают инъекцию зависимостей. В дополнение к классическому DI, **CanHandle()** содержит в качестве параметра **IServiceProvider**.
-
-### Создание пошаговых обработчиков
-Начиная с **v2.1.1** Вы можете конфигурировать пошаговые обработчики, используя метод **UseStepsFor()** из интерфейса **IBranchBuilder**:
-```csharp
-var branchBuilder = new BranchBuilder(serviceProvider); // или var branchBuilder = serviceProvider.GetRequiredService<IBranchBuilder>();
-
-branchBuilder.UseHandler<ExceptionHandler>()
-             .UseStepsFor<Command>(stepsBuilder => 
-             {
-                stepsBuilder.UseStepHandler<AskFirstnameHandler>()
-                            .UseStepHandler<AskLastnameHandler>();
-             });
-```
-Пошаговые обработчики можно определить только для команд. Сами по себе пошаговые обработчики являются командами, но без ссылки на следующий обработчик в цепочке. Каждый пошаговый обработчик позволяет получить запрос из предыдущего шага и ответ на него из текущего шага. Определить пошаговый обработчик можно используя абстрактный класс **StepHandlerBase<TPreviousRequest, TCurrentRequest>**:
-```csharp
-internal class AskLastnameHandler : StepHandlerBase<string, string>
-{
-    public override Task HandleAsync(string previousRequest, string currentRequest)
-    {
-        Console.WriteLine($"Имя: {previousRequest}");
-        Console.WriteLine($"Фамилия: {currentRequest}");
-            
-        return Task.CompletedTask;
-    }
-}
-```
-
-### Создание бота
-<details>
-<summary>До v1.0.2</summary>
-
-**BotFramework** имеет абстракцию **BotBase** для того, чтобы изолировать вызовы **RequestDelegate** в одном месте. Это вовсе необязательно и вы вольны реализовывать вызовы Вашей цепочки так, как Вам хочется. Пример ниже показывает, как LongPolling-сервис вызывает **RequestDelegate** с именем **rootHandler** при получении новых обновлений от Telegram:
-```csharp
-public class TelegramBot : BotBase
-{
-    private readonly ILogger _logger;
-    private readonly ILongPollingService _longPollingService;
-    private readonly CancellationTokenSource _cancellationTokenSource;
-
-    public TelegramBot(RequestDelegate rootHandler, ILogger<TelegramBot> logger, 
-        ILongPollingService longPollingService) : base(rootHandler)
-    {
-        _logger = logger;
-        _longPollingService = longPollingService;
-
-        _cancellationTokenSource = new CancellationTokenSource();
-    }
-
-    public override void Run()
-    {
-        _longPollingService.Receive
-        (
-            _rootHandler,
-            _cancellationTokenSource.Token
-        );
-
-        _logger?.LogInformation("Bot is running...");
-    }
-
-    public override void Stop()
-    {
-        _cancellationTokenSource.Cancel();
-
-        _logger?.LogInformation("Bot stopped");
-    }
-}
-```
-
-</details>
-
-<details>
-<summary> Начиная с v2.1.1</summary>
-
-Абстракция **BotBase** вырезана и больше не используется
-
-</details>
