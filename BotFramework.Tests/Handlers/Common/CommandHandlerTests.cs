@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BotFramework.Extensions;
+using BotFramework.Handlers.Extensions;
 using BotFramework.Tests.Fakes;
 using FluentAssertions;
 using NUnit.Framework;

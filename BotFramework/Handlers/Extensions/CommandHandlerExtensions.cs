@@ -1,10 +1,10 @@
-﻿using BotFramework.Attributes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BotFramework.Attributes;
 using BotFramework.Handlers.Common.Interfaces;
 
-namespace BotFramework.Extensions
+namespace BotFramework.Handlers.Extensions
 {
     /// <summary>
     /// Методы-расширения для <see cref="ICommandHandler"/>

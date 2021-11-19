@@ -1,7 +1,7 @@
 ﻿using System;
-using BotFramework.Extensions;
 using BotFramework.Handlers.Common;
 using BotFramework.Handlers.Common.Interfaces;
+using BotFramework.Handlers.Extensions;
 using BotFramework.Tests.Fakes;
 using Moq;
 using Moq.AutoMock;
