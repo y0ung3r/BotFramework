@@ -1,5 +1,6 @@
 # BotFramework
 [![nuget](https://img.shields.io/nuget/v/BotFramework.NET)](http://www.nuget.org/packages/BotFramework.NET)
+[![build](https://img.shields.io/github/workflow/status/y0ung3r/BotFramework/Build)](https://github.com/y0ung3r/BotFramework/actions/workflows/build.yml)
 [![downloads](https://img.shields.io/nuget/dt/BotFramework.NET?label=downloads)](http://www.nuget.org/packages/BotFramework.NET)
 [![issues](https://img.shields.io/github/issues/y0ung3r/BotFramework)](https://github.com/y0ung3r/BotFramework/issues)
 [![pull requests](https://img.shields.io/github/issues-pr/y0ung3r/BotFramework)](https://github.com/y0ung3r/BotFramework/pulls)
