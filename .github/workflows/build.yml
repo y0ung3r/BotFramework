@@ -20,7 +20,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: dotnet test BotFramework.Tests/BotFramework.Tests.csproj --no-build --verbosity normal
+        run: dotnet test
       - name: Publish to NuGet
         uses: brandedoutcast/publish-nuget@v2.5.5
         with:
