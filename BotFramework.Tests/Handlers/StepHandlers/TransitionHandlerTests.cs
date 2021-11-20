@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using BotFramework.Handlers.Common.Interfaces;
 using BotFramework.Handlers.StepHandlers;
 using BotFramework.Handlers.StepHandlers.Interfaces;
@@ -64,13 +65,32 @@ namespace BotFramework.Tests.Handlers.StepHandlers
         }
 
         [Test]
-        public void Transition_handler_was_running()
+        public async Task Transition_handler_is_running()
         {
             // Arrange
             var sut = CreateTransitionHandler();
             
             // Act
-            sut.HandleAsync
+            await sut.HandleAsync
+            (
+                "/fake", 
+                It.IsAny<RequestDelegate>()
+            );
+            
+            // Assert
+            sut.IsRunning
+               .Should()
+               .BeTrue();
+        }
+
+        [Test]
+        public async Task Successfully_processing_of_the_request()
+        {
+            // Arrange
+            var sut = CreateTransitionHandler();
+            
+            // Act
+            await sut.HandleAsync
             (
                 "/fake", 
                 It.IsAny<RequestDelegate>()
@@ -86,10 +106,31 @@ namespace BotFramework.Tests.Handlers.StepHandlers
                 ),
                 Times.Once()
             );
+        }
 
+        [Test]
+        public async Task Transition_handler_has_finished_its_work()
+        {
+            // Arrange
+            var sut = CreateTransitionHandler();
+            
+            // Act
+            await sut.HandleAsync
+            (
+                "/fake", 
+                It.IsAny<RequestDelegate>()
+            );
+            
+            await sut.HandleAsync
+            (
+                "another request", 
+                It.IsAny<RequestDelegate>()
+            );
+            
+            // Assert
             sut.IsRunning
                .Should()
-               .BeTrue();
+               .BeFalse();
         }
 
         [TearDown]
