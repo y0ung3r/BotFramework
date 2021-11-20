@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BotFramework.Handlers.Common;
 using BotFramework.Handlers.Common.Interfaces;
 using BotFramework.Handlers.Extensions;
@@ -51,13 +52,13 @@ namespace BotFramework.Tests.Handlers.Common
         }
 
         [Test]
-        public void Successfully_processing_of_the_request()
+        public async Task Successfully_processing_of_the_request()
         {
             // Arrange
             var sut = CreateInternalHandler<FakeRequestHandler>(_ => true);
 
             // Act
-            sut.HandleAsync
+            await sut.HandleAsync
             (
                 request: It.IsAny<object>(), 
                 nextHandler: It.IsAny<RequestDelegate>()
@@ -75,13 +76,13 @@ namespace BotFramework.Tests.Handlers.Common
         }
 
         [Test]
-        public void Successfully_processing_of_the_command()
+        public async Task Successfully_processing_of_the_command()
         {
             // Arrange
             var sut = CreateInternalHandler<FakeCommandHandler>(_ => true);
 
             // Act
-            sut.HandleAsync
+            await sut.HandleAsync
             (
                 request: It.IsAny<object>(),
                 nextHandler: It.IsAny<RequestDelegate>()
@@ -99,13 +100,13 @@ namespace BotFramework.Tests.Handlers.Common
         }
 
         [Test]
-        public void Predicate_returns_false()
+        public async Task Predicate_returns_false()
         {
             // Arrange
             var sut = CreateInternalHandler<FakeCommandHandler>(_ => false);
 
             // Act
-            sut.HandleAsync
+            await sut.HandleAsync
             (
                 request: It.IsAny<object>(),
                 nextHandler: It.IsAny<RequestDelegate>()

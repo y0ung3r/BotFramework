@@ -42,7 +42,7 @@ namespace BotFramework.Handlers.StepHandlers
         /// </summary>
         /// <param name="request">Запрос</param>
         /// <param name="nextHandler">Следующий обработчик по цепочке</param>
-        private Task HandleHeadAsync(object request, RequestDelegate nextHandler)
+        private Task SendRequestToHeadAsync(object request, RequestDelegate nextHandler)
         {
             _logger?.LogInformation("Запуск пошагового обработчика и передача в него текущего запроса");
 
@@ -60,7 +60,7 @@ namespace BotFramework.Handlers.StepHandlers
         /// Обрабатывает следующий пошаговый обработчик
         /// </summary>
         /// <param name="request">Запрос</param>
-        private Task HandleStepAsync(object request)
+        private Task SendRequestToStepHandlerAsync(object request)
         {
             _logger?.LogInformation("Текущий запрос перенаправляется в активный пошаговый обработчик");
 
@@ -75,14 +75,11 @@ namespace BotFramework.Handlers.StepHandlers
         /// <param name="nextHandler">Следующий обработчик по цепочке</param>
         public async Task HandleAsync(object request, RequestDelegate nextHandler)
         {
-            if (!IsRunning)
-            {
-                await HandleHeadAsync(request, nextHandler);
-            }
-            else
-            {
-                await HandleStepAsync(request);
-            }
+            var handler = !IsRunning
+                        ? SendRequestToHeadAsync(request, nextHandler)
+                        : SendRequestToStepHandlerAsync(request);
+
+            await handler.ConfigureAwait(false);
             
             _previousRequest = request;
         }
