@@ -39,7 +39,7 @@ namespace BotFramework.Extensions
 
             services.TryAddTransient<Func<ICommandHandler, IReadOnlyCollection<IStepHandler>, TransitionHandler>>
             (
-                serviceProvider => (head, handlers) => ActivatorUtilities.CreateInstance<TransitionHandler>(serviceProvider, head, handlers)
+                serviceProvider => (commandHandler, handlers) => ActivatorUtilities.CreateInstance<TransitionHandler>(serviceProvider, commandHandler, handlers)
             );
 
             return services;
