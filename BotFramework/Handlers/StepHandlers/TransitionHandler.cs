@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BotFramework.Handlers.Common.Interfaces;
 using BotFramework.Handlers.StepHandlers.Interfaces;
+using BotFramework.Handlers.StepHandlers.States;
 using Microsoft.Extensions.Logging;
 
 namespace BotFramework.Handlers.StepHandlers
@@ -13,10 +14,11 @@ namespace BotFramework.Handlers.StepHandlers
     internal sealed class TransitionHandler : ICommandHandler
     {
         private readonly ILogger<TransitionHandler> _logger;
-        private readonly ICommandHandler _head;
+        private readonly ICommandHandler _commandHandler;
         private readonly IReadOnlyCollection<IStepHandler> _source;
         private readonly Stack<IStepHandler> _handlersToExecute;
         private object _previousRequest;
+        private TransitionHandlerStateBase _state;
 
         /// <summary>
         /// Показывает запущен ли текущий обработчик пошаговых переходов
@@ -27,14 +29,64 @@ namespace BotFramework.Handlers.StepHandlers
         /// Базовый конструктор
         /// </summary>
         /// <param name="logger">Сервис логгирования</param>
-        /// <param name="head">Команда, которая запускает пошаговые обработчики</param>
+        /// <param name="commandHandler">Команда, которая запускает пошаговые обработчики</param>
         /// <param name="handlers">Обработчики, который необходимо выполнять пошагово</param>        
-        public TransitionHandler(ILogger<TransitionHandler> logger, ICommandHandler head, IReadOnlyCollection<IStepHandler> handlers)
+        public TransitionHandler(ILogger<TransitionHandler> logger, ICommandHandler commandHandler, IReadOnlyCollection<IStepHandler> handlers)
         {
             _logger = logger;
-            _head = head;
+            _commandHandler = commandHandler;
             _source = handlers;
             _handlersToExecute = new Stack<IStepHandler>();
+            
+            SetState
+            (
+                new IdleState(this)
+            );
+        }
+
+        /// <summary>
+        /// Восстанавливает исходное состояние обработчиков
+        /// </summary>
+        private void RestoreStepHandlers()
+        {
+            _previousRequest = null;
+            
+            if (_handlersToExecute.Count > 0)
+            {
+                _handlersToExecute.Clear();
+            }
+            
+            foreach (var handler in _source)
+            {
+                _handlersToExecute.Push(handler);
+            }
+        }
+        
+        /// <summary>
+        /// Изменяет состояние текущего обработчика пошаговых переходов
+        /// </summary>
+        /// <param name="newState">Новое состояние</param>
+        public void SetState(TransitionHandlerStateBase newState)
+        {
+            _state = newState;
+        }
+        
+        /// <summary>
+        /// Показывает может ли выполниться следующий пошаговый обработчик
+        /// </summary>
+        /// <param name="request">Запрос</param>
+        public bool NextStepHandlerCanHandle(object request)
+        {
+            return IsRunning && _handlersToExecute.Peek().CanHandle(_previousRequest, request);
+        }
+
+        /// <summary>
+        /// Показывает может ли выполниться команда, которая перезапустит выполнение пошаговых обработчиков
+        /// </summary>
+        /// <param name="request">Запрос</param>
+        public bool CommandCanHandle(object request)
+        {
+            return _commandHandler.CanHandle(request);
         }
 
         /// <summary>
@@ -42,30 +94,24 @@ namespace BotFramework.Handlers.StepHandlers
         /// </summary>
         /// <param name="request">Запрос</param>
         /// <param name="nextHandler">Следующий обработчик по цепочке</param>
-        private Task SendRequestToHeadAsync(object request, RequestDelegate nextHandler)
+        public Task HandleByCommandAsync(object request, RequestDelegate nextHandler)
         {
             _logger?.LogInformation("Запуск пошагового обработчика и передача в него текущего запроса");
 
-            _previousRequest = null;
-                
-            foreach (var handler in _source)
-            {
-                _handlersToExecute.Push(handler);
-            }
+            RestoreStepHandlers();
 
-            return _head.HandleAsync(request, nextHandler);
+            return _commandHandler.HandleAsync(request, nextHandler);
         }
 
         /// <summary>
         /// Обрабатывает следующий пошаговый обработчик
         /// </summary>
         /// <param name="request">Запрос</param>
-        private Task SendRequestToStepHandlerAsync(object request)
+        public Task HandleByNextStepHandlerAsync(object request)
         {
             _logger?.LogInformation("Текущий запрос перенаправляется в активный пошаговый обработчик");
 
-            return _handlersToExecute.Pop()
-                                     .HandleAsync(_previousRequest, request);
+            return _handlersToExecute.Pop().HandleAsync(_previousRequest, request);
         }
 
         /// <summary>
@@ -75,11 +121,9 @@ namespace BotFramework.Handlers.StepHandlers
         /// <param name="nextHandler">Следующий обработчик по цепочке</param>
         public async Task HandleAsync(object request, RequestDelegate nextHandler)
         {
-            var handler = !IsRunning
-                        ? SendRequestToHeadAsync(request, nextHandler)
-                        : SendRequestToStepHandlerAsync(request);
-
-            await handler.ConfigureAwait(false);
+            _logger?.LogInformation("Перенаправление запроса в обработчик пошаговых переходов");
+            
+            await _state.HandleAsync(request, nextHandler).ConfigureAwait(false);
             
             _previousRequest = request;
         }
@@ -88,15 +132,6 @@ namespace BotFramework.Handlers.StepHandlers
         /// Проверяет могут ли пошаговые обработчики быть запущены
         /// </summary>
         /// <param name="request">Запрос</param>
-        public bool CanHandle(object request)
-        {
-            if (!IsRunning)
-            {
-                return _head.CanHandle(request);
-            }
-
-            return _handlersToExecute.Peek()
-                                     .CanHandle(_previousRequest, request);
-        }
+        public bool CanHandle(object request) => _state.CanHandle(request);
     }
 }
