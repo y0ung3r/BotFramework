@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotFramework", "BotFramewor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotFramework.Tests", "BotFramework.Tests\BotFramework.Tests.csproj", "{3D383E68-3D0A-4986-B618-013D29B271EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotFramework.Example", "BotFramework.Example\BotFramework.Example.csproj", "{037A16C5-E70D-47D9-B77C-C26BE36B4E44}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,15 +21,13 @@ Global
 		{3D383E68-3D0A-4986-B618-013D29B271EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D383E68-3D0A-4986-B618-013D29B271EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D383E68-3D0A-4986-B618-013D29B271EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{037A16C5-E70D-47D9-B77C-C26BE36B4E44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{037A16C5-E70D-47D9-B77C-C26BE36B4E44}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{037A16C5-E70D-47D9-B77C-C26BE36B4E44}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{037A16C5-E70D-47D9-B77C-C26BE36B4E44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {207AA515-9953-4EAC-8473-C8A921572A58}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

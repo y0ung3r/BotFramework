@@ -8,7 +8,7 @@ namespace BotFramework.Tests.Fakes
     /// Fake для <see cref="ICommandHandler"/>
     /// </summary>
     [CommandAliases("/fake, /command")]
-    public class FakeCommandHandler : ICommandHandler
+    public class FakeCommand : ICommandHandler
     {
         public Task HandleAsync(object request, RequestDelegate nextHandler) => Task.CompletedTask;
         
@@ -18,7 +18,7 @@ namespace BotFramework.Tests.Fakes
     /// <summary>
     /// Fake для <see cref="ICommandHandler"/> без использования псевдонима
     /// </summary>
-    public class FakeCommandHandlerWithoutAliases : ICommandHandler
+    public class FakeCommandWithoutAliases : ICommandHandler
     {
         public Task HandleAsync(object request, RequestDelegate nextHandler) => Task.CompletedTask;
         

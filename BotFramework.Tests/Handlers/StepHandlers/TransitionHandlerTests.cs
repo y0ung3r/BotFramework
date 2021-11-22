@@ -29,7 +29,7 @@ namespace BotFramework.Tests.Handlers.StepHandlers
         
         private TransitionHandler CreateTransitionHandler()
         {
-            var fakeCommand = new FakeCommandHandler();
+            var fakeCommand = new FakeCommand();
             var fakeStepHandler = new FakeStepHandler();
             var fakeStepHandlers = new ReadOnlyCollection<IStepHandler>
             (
@@ -40,47 +40,19 @@ namespace BotFramework.Tests.Handlers.StepHandlers
             );
 
             _mocker.Use<ICommandHandler>(fakeCommand);
-            _mocker.Setup<ICommandHandler>
+            _mocker.Use<IStepHandler>(fakeStepHandler);
+            _mocker.Use<IReadOnlyCollection<IStepHandler>>(fakeStepHandlers);
+
+            _mocker.Setup<ITransitionContext>
             (
-                command => command.HandleAsync
+                context => context.HandleAsync
                 (
                     It.IsAny<object>(),
                     It.IsAny<RequestDelegate>()
                 )
             );
 
-            _mocker.Use<IStepHandler>(fakeStepHandler);
-            _mocker.Setup<IStepHandler>
-            (
-                stepHandler => stepHandler.HandleAsync
-                (
-                    It.IsAny<object>(),
-                    It.IsAny<object>()
-                )
-            );
-
-            _mocker.Use<IReadOnlyCollection<IStepHandler>>(fakeStepHandlers);
-            
             return _mocker.CreateInstance<TransitionHandler>();
-        }
-
-        [Test]
-        public async Task Transition_handler_is_running()
-        {
-            // Arrange
-            var sut = CreateTransitionHandler();
-            
-            // Act
-            await sut.HandleAsync
-            (
-                "/fake", 
-                It.IsAny<RequestDelegate>()
-            );
-            
-            // Assert
-            sut.IsRunning
-               .Should()
-               .BeTrue();
         }
 
         [Test]
@@ -97,40 +69,15 @@ namespace BotFramework.Tests.Handlers.StepHandlers
             );
             
             // Assert
-            _mocker.Verify<ICommandHandler>
+            _mocker.Verify<ITransitionContext>
             (
-                command => command.HandleAsync
+                context => context.HandleAsync
                 (
                     It.IsAny<object>(),
                     It.IsAny<RequestDelegate>()
                 ),
                 Times.Once()
             );
-        }
-
-        [Test]
-        public async Task Transition_handler_has_finished_its_work()
-        {
-            // Arrange
-            var sut = CreateTransitionHandler();
-            
-            // Act
-            await sut.HandleAsync
-            (
-                "/fake", 
-                It.IsAny<RequestDelegate>()
-            );
-            
-            await sut.HandleAsync
-            (
-                "another request", 
-                It.IsAny<RequestDelegate>()
-            );
-            
-            // Assert
-            sut.IsRunning
-               .Should()
-               .BeFalse();
         }
 
         [TearDown]

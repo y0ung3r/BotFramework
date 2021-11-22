@@ -22,7 +22,7 @@ namespace BotFramework.Tests
 
             services.AddBotFramework()
                     .AddHandler<FakeRequestHandler>()
-                    .AddHandler<FakeCommandHandler>();
+                    .AddHandler<FakeCommand>();
 
             _sut = new BranchBuilder(services);
         }
@@ -65,7 +65,7 @@ namespace BotFramework.Tests
         public void Injecting_a_command_in_the_branch()
         {
             // Arrange
-            var commandHandler = new FakeCommandHandler();
+            var commandHandler = new FakeCommand();
 
             // Act
             _sut.UseCommand(commandHandler);
@@ -86,7 +86,7 @@ namespace BotFramework.Tests
         {
             // Arrange
             var requestHandler = new FakeRequestHandler();
-            var commandHandler = new FakeCommandHandler();
+            var commandHandler = new FakeCommand();
 
             // Act
             _sut.UseHandler(requestHandler)
@@ -111,14 +111,19 @@ namespace BotFramework.Tests
         public void Injecting_a_command_step_handlers_in_the_branch()
         {
             // Arrange
-            var fakeCommand = new FakeCommandHandler();
+            var fakeCommand = new FakeCommand();
             var fakeStepHandler = new FakeStepHandler();
 
             // Act
-            _sut.UseStepsFor(fakeCommand, stepsBuilder =>
-            {
-                stepsBuilder.UseStepHandler(fakeStepHandler);
-            });
+            _sut.UseStepsFor
+            (
+	            fakeCommand, 
+	            stepsBuilder =>
+	            {
+	                stepsBuilder.UseStepHandler(fakeStepHandler);
+	            },
+	            _ => nameof(FakeCommand)
+	        );
             
             // Assert
             _sut.Handlers.ElementAt(index: 0)

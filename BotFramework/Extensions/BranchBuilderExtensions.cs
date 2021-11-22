@@ -117,8 +117,10 @@ namespace BotFramework.Extensions
         /// <param name="builder">Построитель цепочки обязанностей</param>
         /// <param name="commandHandler">Обработчик команды, который должен пошагового обрабатываться</param>
         /// <param name="configure">Конфигурация</param>
+        /// <param name="uniqueKeySelector">Селектор уникального ключа из запроса (например, идентификатор чата)</param>
         /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
-        public static IBranchBuilder UseStepsFor(this IBranchBuilder builder, ICommandHandler commandHandler, Action<IStepsBuilder> configure)
+        public static IBranchBuilder UseStepsFor(this IBranchBuilder builder, ICommandHandler commandHandler, 
+            Action<IStepsBuilder> configure, Func<object, object> uniqueKeySelector)
         {
             var serviceProvider = builder.ServiceProvider;
             var anotherBranchBuilder = builder.CreateAnotherBranch
@@ -126,7 +128,7 @@ namespace BotFramework.Extensions
                 branchBuilder => configure(branchBuilder as IStepsBuilder)
             );
             
-            var transitionHandlerFactory = serviceProvider.GetRequiredService<Func<ICommandHandler, IReadOnlyCollection<IStepHandler>, TransitionHandler>>();
+            var transitionHandlerFactory = serviceProvider.GetRequiredService<Func<ICommandHandler, IReadOnlyCollection<IStepHandler>, Func<object, object>, TransitionHandler>>();
             var stepHandlers = anotherBranchBuilder.Handlers
                                                    .Cast<IStepHandler>()
                                                    .ToList()
@@ -134,7 +136,7 @@ namespace BotFramework.Extensions
 
             return builder.UseCommand
             (
-                transitionHandlerFactory(commandHandler, stepHandlers)
+                transitionHandlerFactory(commandHandler, stepHandlers, uniqueKeySelector)
             );
         }
 
@@ -144,14 +146,17 @@ namespace BotFramework.Extensions
         /// <typeparam name="TCommandHandler">Тип обработчик команды, который должен пошагового обрабатываться</typeparam>
         /// <param name="builder">Построитель цепочки обязанностей</param>
         /// <param name="configure">Конфигурация</param>
+        /// <param name="uniqueKeySelector">Селектор уникального ключа из запроса (например, идентификатор чата)</param>
         /// <returns>Текущий экземпляр построителя цепочки обязанностей</returns>
-        public static IBranchBuilder UseStepsFor<TCommandHandler>(this IBranchBuilder builder, Action<IStepsBuilder> configure)
+        public static IBranchBuilder UseStepsFor<TCommandHandler>(this IBranchBuilder builder, 
+            Action<IStepsBuilder> configure, Func<object, object> uniqueKeySelector)
             where TCommandHandler : ICommandHandler
         {
             return builder.UseStepsFor
             (
                 builder.ServiceProvider.GetRequiredService<TCommandHandler>(),
-                configure
+                configure,
+                uniqueKeySelector
             );
         }
     }
