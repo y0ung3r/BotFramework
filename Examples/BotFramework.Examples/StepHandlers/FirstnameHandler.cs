@@ -11,7 +11,7 @@ namespace StepHandlers
 	{
 		public override Task HandleAsync(string previousRequest, string currentRequest)
 		{
-			Console.WriteLine($"Отлично, {previousRequest} {currentRequest}!");
+			Console.WriteLine($"Отлично, {currentRequest}!");
 			Console.WriteLine("Теперь, укажите фамилию:");
 			
 			return Task.CompletedTask;
