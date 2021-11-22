@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfc0fb8a-1895-4a71-a537-5f2fb7292506" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.BotFramework.Examples/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.BotFramework.Examples/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.BotFramework.Examples/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.BotFramework.Examples/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.BotFramework.Examples/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Basics/Basics.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Basics/Interfaces/ISimpleService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Basics/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Basics/SimpleCommand.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Basics/SimpleHandler.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Basics/SimpleService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BotFramework.Examples.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BotFramework.Examples/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BotFramework.Examples/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Basics/SimpleHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Basics/SimpleHandler.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +58,8 @@
       <updated>1637597641398</updated>
       <workItem from="1637597644180" duration="8000" />
       <workItem from="1637597695930" duration="1517000" />
+      <workItem from="1637599404904" duration="75000" />
+      <workItem from="1637599490106" duration="14000" />
     </task>
     <servers />
   </component>
@@ -84,6 +76,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />

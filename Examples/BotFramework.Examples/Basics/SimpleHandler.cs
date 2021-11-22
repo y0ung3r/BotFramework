@@ -25,7 +25,7 @@ namespace Basics
 			// если по какой-то причине текущий обработчик не сможет его выполнить
 			if (request is "Стоп")
 			{
-				return nextHandler(request);
+				return nextHandler?.Invoke(request) ?? Task.CompletedTask;
 			}
 			
 			// Обработка запроса
