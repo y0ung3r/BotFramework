@@ -94,9 +94,11 @@ namespace BotFramework.Handlers.StepHandlers
 			{
 				await InvokeCommandAsync(request, nextHandler).ConfigureAwait(false);
 			}
-			
-			await InvokeStepHandlerAsync(request).ConfigureAwait(false);
-			
+			else
+			{
+				await InvokeStepHandlerAsync(request).ConfigureAwait(false);
+			}
+
 			_previousRequest = request;
 		}
 
