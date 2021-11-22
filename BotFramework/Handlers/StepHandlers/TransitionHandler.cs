@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BotFramework.Handlers.Common.Interfaces;
@@ -30,8 +31,10 @@ namespace BotFramework.Handlers.StepHandlers
         /// </summary>
         /// <param name="logger">Сервис логгирования</param>
         /// <param name="commandHandler">Команда, которая запускает пошаговые обработчики</param>
-        /// <param name="handlers">Обработчики, который необходимо выполнять пошагово</param>        
-        public TransitionHandler(ILogger<TransitionHandler> logger, ICommandHandler commandHandler, IReadOnlyCollection<IStepHandler> handlers)
+        /// <param name="handlers">Обработчики, который необходимо выполнять пошагово</param>
+        /// <param name="uniqueKeySelector">Селектор уникального ключа из запроса (например, идентификатор чата)</param>
+        public TransitionHandler(ILogger<TransitionHandler> logger, ICommandHandler commandHandler, 
+            IReadOnlyCollection<IStepHandler> handlers, Func<object, object> uniqueKeySelector)
         {
             _logger = logger;
             _commandHandler = commandHandler;

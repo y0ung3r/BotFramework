@@ -29,7 +29,7 @@ namespace BotFramework.Tests.Handlers.StepHandlers
         
         private TransitionHandler CreateTransitionHandler()
         {
-            var fakeCommand = new FakeCommandHandler();
+            var fakeCommand = new FakeCommand();
             var fakeStepHandler = new FakeStepHandler();
             var fakeStepHandlers = new ReadOnlyCollection<IStepHandler>
             (

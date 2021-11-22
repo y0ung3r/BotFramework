@@ -37,9 +37,18 @@ namespace BotFramework.Extensions
                 serviceProvider => (branch, predicate) => ActivatorUtilities.CreateInstance<InternalHandler>(serviceProvider, branch, predicate)
             );
 
-            services.TryAddTransient<Func<ICommandHandler, IReadOnlyCollection<IStepHandler>, TransitionHandler>>
+            services.TryAddTransient<Func<ICommandHandler, IReadOnlyCollection<IStepHandler>, Func<object, object>, TransitionHandler>>
             (
-                serviceProvider => (commandHandler, handlers) => ActivatorUtilities.CreateInstance<TransitionHandler>(serviceProvider, commandHandler, handlers)
+                serviceProvider =>
+                {
+                    return (commandHandler, handlers, uniqueKeySelector) => ActivatorUtilities.CreateInstance<TransitionHandler>
+                    (
+                        serviceProvider, 
+                        commandHandler,
+                        handlers,
+                        uniqueKeySelector
+                    );
+                }
             );
 
             return services;

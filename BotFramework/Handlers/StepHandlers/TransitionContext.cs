@@ -5,15 +5,10 @@ using BotFramework.Handlers.StepHandlers.Interfaces;
 namespace BotFramework.Handlers.StepHandlers
 {
 	/// <summary>
-	/// Представляет упакованные на выполнение пошаговые обработчики с уникальным ключом
+	/// Представляет упакованные на выполнение пошаговые обработчики
 	/// </summary>
-	internal sealed class StepHandlerDistribution
+	internal sealed class TransitionContext
 	{
-		/// <summary>
-		/// Уникальный ключ
-		/// </summary>
-		public object UniqueKey { get; }
-		
 		/// <summary>
 		/// Выполняемая команда
 		/// </summary>

@@ -26,15 +26,23 @@ namespace BotFramework.Example
             var serviceProvider = services.BuildServiceProvider();
             var branchBuilder = serviceProvider.GetRequiredService<IBranchBuilder>();
 
-            branchBuilder.UseStepsFor<FirstCommand>(stepsBuilder =>
-                         {
-                             stepsBuilder.UseStepHandler<StartHandler>()
-                                         .UseStepHandler<EndHandler>();
-                         })
-                         .UseStepsFor<SecondCommand>(stepsBuilder =>
-                         {
-                             stepsBuilder.UseStepHandler<SingleHandler>();
-                         })
+            branchBuilder.UseStepsFor<FirstCommand>
+                         (
+                             stepsBuilder =>
+                             {
+                                 stepsBuilder.UseStepHandler<StartHandler>()
+                                             .UseStepHandler<EndHandler>();
+                             }, 
+                             _ => nameof(FirstCommand)
+                         )
+                         .UseStepsFor<SecondCommand>
+                         (
+                             stepsBuilder =>
+                             {
+                                 stepsBuilder.UseStepHandler<SingleHandler>();
+                             },
+                             _ => nameof(SecondCommand)
+                         )
                          .UseHandler<MissingRequestHandler>();
 
             var branch = branchBuilder.Build();

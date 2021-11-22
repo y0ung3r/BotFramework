@@ -79,7 +79,7 @@ namespace BotFramework.Tests.Handlers.Common
         public async Task Successfully_processing_of_the_command()
         {
             // Arrange
-            var sut = CreateInternalHandler<FakeCommandHandler>(_ => true);
+            var sut = CreateInternalHandler<FakeCommand>(_ => true);
 
             // Act
             await sut.HandleAsync
@@ -103,7 +103,7 @@ namespace BotFramework.Tests.Handlers.Common
         public async Task Predicate_returns_false()
         {
             // Arrange
-            var sut = CreateInternalHandler<FakeCommandHandler>(_ => false);
+            var sut = CreateInternalHandler<FakeCommand>(_ => false);
 
             // Act
             await sut.HandleAsync
