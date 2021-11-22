@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="BotFramework.NET" Version="2.1.6" />
+      <PackageReference Include="BotFramework.NET" Version="2.1.7" />
     </ItemGroup>
 
 </Project>
