@@ -90,11 +90,12 @@ namespace BotFramework.Handlers.StepHandlers
 		/// <param name="nextHandler">Следующий обработчик по цепочке</param>
 		public async Task HandleAsync(object request, RequestDelegate nextHandler)
 		{
-			var handleTask = CommandCanHandle(request) && !NextStepHandlerCanHandle(request)
-				           ? InvokeCommandAsync(request, nextHandler)
-						   : InvokeStepHandlerAsync(request);
-
-			await handleTask.ConfigureAwait(false);
+			if (CommandCanHandle(request) && !NextStepHandlerCanHandle(request))
+			{
+				await InvokeCommandAsync(request, nextHandler).ConfigureAwait(false);
+			}
+			
+			await InvokeStepHandlerAsync(request).ConfigureAwait(false);
 			
 			_previousRequest = request;
 		}

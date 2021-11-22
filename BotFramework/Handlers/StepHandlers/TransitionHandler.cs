@@ -42,7 +42,7 @@ namespace BotFramework.Handlers.StepHandlers
         /// Проверяет могут ли пошаговые обработчики быть запущены, используя <see cref="_keySelector"/>
         /// </summary>
         /// <param name="request">Запрос</param>
-        private bool CanHandleByKey(object request)
+        private bool NextStepHandlerCanHandle(object request)
         {
             var key = _keySelector(request);
             var containsKey = _executingContexts.ContainsKey(key);
@@ -84,6 +84,6 @@ namespace BotFramework.Handlers.StepHandlers
         /// Проверяет могут ли пошаговые обработчики быть запущены
         /// </summary>
         /// <param name="request">Запрос</param>
-        public bool CanHandle(object request) => CanHandleByKey(request) || _command.CanHandle(request);
+        public bool CanHandle(object request) => _command.CanHandle(request) || NextStepHandlerCanHandle(request);
     }
 }
