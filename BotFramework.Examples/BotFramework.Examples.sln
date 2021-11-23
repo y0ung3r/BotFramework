@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics", "Basics\Basics.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StepHandlers", "StepHandlers\StepHandlers.csproj", "{A14A9B0C-6B61-4F9F-94DD-A2E2BDC7A3C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{C1B96D5E-B742-4282-9467-FA72FF5D6288}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{A14A9B0C-6B61-4F9F-94DD-A2E2BDC7A3C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A14A9B0C-6B61-4F9F-94DD-A2E2BDC7A3C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A14A9B0C-6B61-4F9F-94DD-A2E2BDC7A3C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B96D5E-B742-4282-9467-FA72FF5D6288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B96D5E-B742-4282-9467-FA72FF5D6288}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B96D5E-B742-4282-9467-FA72FF5D6288}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B96D5E-B742-4282-9467-FA72FF5D6288}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
