@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net5.0;net6.0;netstandard2.0</TargetFrameworks>
-    <Version>2.1.7</Version>
+    <Version>2.1.8</Version>
     <Authors>y0ung3r (Nikita Velikiy)</Authors>
     <Title>BotFramework</Title>
     <Description>Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей</Description>
