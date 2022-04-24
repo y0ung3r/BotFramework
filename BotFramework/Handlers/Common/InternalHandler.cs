@@ -36,19 +36,28 @@ namespace BotFramework.Handlers.Common
         {
             if (_condition(request))
             {
-                _logger?.LogInformation("Текущий запрос перенаправляется во вложенную ветвь");
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Текущий запрос перенаправляется во вложенную ветвь");
+                }
 
                 return _branch(request);
             }
 
             if (nextHandler != null) 
             {
-                _logger?.LogInformation("Текущий запрос перенаправляется к следующему обработчику по цепочке");
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Текущий запрос перенаправляется к следующему обработчику по цепочке");
+                }
 
                 return nextHandler(request);
             }
 
-            _logger?.LogInformation("Запрос обработан");
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Запрос обработан");
+            }
 
             return Task.CompletedTask;
         }

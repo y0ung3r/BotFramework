@@ -56,7 +56,10 @@ namespace BotFramework.Handlers.StepHandlers
         /// <param name="nextHandler">Следующий обработчик по цепочке</param>
         public async Task HandleAsync(object request, RequestDelegate nextHandler)
         {
-            _logger?.LogInformation("Выполнение запроса обработчиком пошаговых переходов");
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Выполнение запроса обработчиком пошаговых переходов");
+            }
 
             var key = _keySelector(request);
 

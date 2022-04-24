@@ -57,8 +57,11 @@ namespace BotFramework.Handlers.StepHandlers
 		/// <param name="nextHandler">Следующий обработчик по цепочке</param>
 		private Task InvokeCommandAsync(object request, RequestDelegate nextHandler)
 		{
-			_logger?.LogInformation("Запрос передан на выполнение обработчику команды");
-			
+			if (_logger.IsEnabled(LogLevel.Information))
+			{
+				_logger.LogInformation("Запрос передан на выполнение обработчику команды");
+			}
+
 			if (_remainingHandlers.Count > 0)
 			{
 				_remainingHandlers.Clear();
@@ -78,8 +81,11 @@ namespace BotFramework.Handlers.StepHandlers
 		/// <param name="request">Запрос</param>
 		private Task InvokeStepHandlerAsync(object request)
 		{
-			_logger?.LogInformation("Запрос передан следующему на выполнение пошаговому обработчику");
-			
+			if (_logger.IsEnabled(LogLevel.Information))
+			{
+				_logger.LogInformation("Запрос передан следующему на выполнение пошаговому обработчику");
+			}
+
 			return _remainingHandlers.Pop().HandleAsync(_previousRequest, request);
 		}
 

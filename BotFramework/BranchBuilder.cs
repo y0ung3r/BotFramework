@@ -59,7 +59,14 @@ namespace BotFramework
         {
             _handlers.Push(handler);
 
-            _logger?.LogInformation("Обработчик запроса добавлен в цепочку");
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation
+                (
+                    "Обработчик запроса с типом \"{HandlerType}\" добавлен в цепочку", 
+                    handler.GetType()
+                );
+            }
 
             return this;
         }
@@ -70,7 +77,7 @@ namespace BotFramework
         /// <param name="handler">Пошаговый обработчик</param>
         public IStepsBuilder UseStepHandler(IStepHandler handler)
         {
-            return UseHandler(handler) as IStepsBuilder;
+            return (IStepsBuilder)UseHandler(handler);
         }
 
         /// <summary>
@@ -88,8 +95,11 @@ namespace BotFramework
                 default(RequestDelegate), 
                 (nextHandler, currentHandler) => currentHandler(nextHandler)
             );
-
-            _logger?.LogInformation("Цепочка обязанностей построена");
+            
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Цепочка обязанностей построена");
+            }
 
             return rootHandler;
         }
