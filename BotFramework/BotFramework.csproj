@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0;netstandard2.0</TargetFrameworks>
     <Version>2.1.8</Version>
     <Authors>y0ung3r (Nikita Velikiy)</Authors>
     <Title>BotFramework</Title>
@@ -12,6 +11,7 @@
     <PackageTags>.net;bot;bot-framework;botframework;framework</PackageTags>
     <PackageProjectUrl>https://github.com/y0ung3r/BotFramework</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   
   <PropertyGroup>
