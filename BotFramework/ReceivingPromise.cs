@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BotFramework;
@@ -7,11 +8,18 @@ public class ReceivingPromise
 {
     private object _update;
     
+    private readonly CancellationTokenSource _supplyCancellationTokenSource;
+    
     public Type UpdateType { get; }
-
-    public ReceivingPromise(Type updateType)
+    
+    public Type TargetType { get; }
+    
+    public ReceivingPromise(Type updateType, Type targetType)
     {
+        _supplyCancellationTokenSource = new CancellationTokenSource();
+        
         UpdateType = updateType;
+        TargetType = targetType;
     }
 
     public void Supply<TUpdate>(TUpdate update)
@@ -25,8 +33,14 @@ public class ReceivingPromise
     {
         return Task.Run
         (
-            WaitUpdate<TUpdate>
+            WaitUpdate<TUpdate>,
+            _supplyCancellationTokenSource.Token
         );
+    }
+    
+    public void CancelWait()
+    {
+        _supplyCancellationTokenSource.Cancel();
     }
 
     private TUpdate WaitUpdate<TUpdate>()

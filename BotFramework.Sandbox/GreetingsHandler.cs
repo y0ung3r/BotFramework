@@ -1,12 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using BotFramework.Context.Interfaces;
+using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
+using Telegram.Bot;
 
-namespace BotFramework;
+namespace BotFramework.Sandbox;
 
-public class GreetingsHandler : IUpdateHandler<string>
+public class GreetingsHandler : IUpdateHandler<string, ITelegramBotClient>
 {
-    public async Task HandleAsync(string command, IBotContext context)
+    public async Task HandleAsync(string command, IBotContext<ITelegramBotClient> context)
     {
         if (command == "/greetings")
         {

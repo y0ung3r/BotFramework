@@ -1,24 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BotFramework.Context.Interfaces;
+using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 
 namespace BotFramework;
 
-public class UpdatesMediator : IUpdateReceiver, IUpdateScheduler
+public class UpdatesMediator<TClient> : IUpdateReceiver, IUpdateScheduler
+    where TClient : class
 {
+    private readonly IBotContextFactory<TClient> _contextFactory;
+    private readonly IUpdateHandlerFactory<TClient> _handlerFactory;
     private readonly ICollection<ReceivingPromise> _promises;
 
-    public UpdatesMediator()
+    public UpdatesMediator(IBotContextFactory<TClient> contextFactory, IUpdateHandlerFactory<TClient> handlerFactory)
     {
+        _contextFactory = contextFactory;
+        _handlerFactory = handlerFactory;
         _promises = new List<ReceivingPromise>();
     }
     
-    private ReceivingPromise CreatePromise<TUpdate>() 
+    private ReceivingPromise CreatePromise<TUpdate>(IUpdateHandler handler) 
         where TUpdate : class
     {
         var updateType = typeof(TUpdate);
-        var promise = new ReceivingPromise(updateType);
+        var handlerType = handler.GetType();
+        var promise = new ReceivingPromise(updateType, handlerType);
         _promises.Add(promise);
         
         return promise;
@@ -28,14 +36,20 @@ public class UpdatesMediator : IUpdateReceiver, IUpdateScheduler
         where TUpdate : class
     {
         var updateType = update.GetType();
-        var existingPromise = _promises.FirstOrDefault(promise => promise.UpdateType == updateType);
+        var existingPromise = _promises.FirstOrDefault
+        (
+            promise => promise.UpdateType == updateType
+        );
 
         if (existingPromise is null)
         {
-            var handler = new GreetingsHandler();
-            var typedUpdate = update.ToString();
-            var botContext = new BotContext(this);
-            await handler.HandleAsync(typedUpdate, botContext);
+            var handlers = _handlerFactory.Create<TUpdate>();
+
+            foreach (var handler in handlers)
+            {
+                var botContext = _contextFactory.Create(this, handler);
+                await handler.HandleAsync(update, botContext);
+            }
         }
         else
         {
@@ -53,6 +67,6 @@ public class UpdatesMediator : IUpdateReceiver, IUpdateScheduler
         );
     }
 
-    public Task<TUpdate> ScheduleAsync<TUpdate>() 
-        where TUpdate : class => CreatePromise<TUpdate>().WaitUpdateAsync<TUpdate>();
+    public Task<TUpdate> ScheduleAsync<TUpdate>(IUpdateHandler handler) 
+        where TUpdate : class => CreatePromise<TUpdate>(handler).WaitUpdateAsync<TUpdate>();
 }
