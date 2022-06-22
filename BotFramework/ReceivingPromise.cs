@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace BotFramework;
 
-public class ReceivingPromise
+internal class ReceivingPromise
 {
     private object _update;
     
