@@ -1,5 +1,4 @@
 ﻿using BotFramework.Context.Interfaces;
-using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 
 namespace BotFramework.Context;
@@ -14,8 +13,8 @@ internal class BotContextFactory<TClient> : IBotContextFactory<TClient>
         _client = client;
     }
 
-    public IBotContext<TClient> Create(IUpdateScheduler scheduler, IUpdateHandler handler)
+    public IBotContext<TClient> Create(IUpdateScheduler scheduler)
     {
-        return new BotContext<TClient>(scheduler, handler, _client);
+        return new BotContext<TClient>(scheduler, _client);
     }
 }

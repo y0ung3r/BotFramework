@@ -1,15 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Basics.Interfaces;
-using BotFramework;
-using BotFramework.Handlers.Common;
+using BotFramework.Context.Interfaces;
+using BotFramework.Handlers.Interfaces;
 
 namespace Basics
 {
 	/// <summary>
 	/// Простой обработчик
 	/// </summary>
-	public class SimpleHandler : RequestHandlerBase<string>
+	public class SimpleHandler : IUpdateHandler<string, TextWriter>
 	{
 		private readonly ISimpleService _simpleService;
 		
@@ -18,20 +19,12 @@ namespace Basics
 		{
 			_simpleService = simpleService;
 		}
-		
-		public override Task HandleAsync(string request, RequestDelegate nextHandler)
-		{
-			// Мы можем передать запрос следующему обработчику в цепочке,
-			// если по какой-то причине текущий обработчик не сможет его выполнить
-			if (request is "Стоп")
-			{
-				return nextHandler?.Invoke(request) ?? Task.CompletedTask;
-			}
-			
-			// Обработка запроса
-			Console.WriteLine($"Вы ввели: {request}");
 
-			// Дополнительная обработка с помощью сервиса
+		public Task HandleAsync(string update, IBotContext<TextWriter> context)
+		{
+			Console.WriteLine($"Обновление получено: {update}");
+			
+			// Дополнительная логика с помощью сервиса
 			if (_simpleService.BotFrameworkIsCool)
 			{
 				Console.WriteLine("DI работает!");

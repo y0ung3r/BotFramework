@@ -2,7 +2,7 @@
 
 namespace BotFramework.Handlers.Interfaces;
 
-public interface IUpdateHandlerFactory<TClient>
+public interface IUpdateHandlerFactory<in TClient>
     where TClient : class
 {
     public IEnumerable<IUpdateHandler<TUpdate, TClient>> Create<TUpdate>()

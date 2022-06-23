@@ -6,7 +6,7 @@ namespace BotFramework.Handlers.Interfaces;
 public interface IUpdateHandler
 { }
 
-public interface IUpdateHandler<in TUpdate, TClient> : IUpdateHandler
+public interface IUpdateHandler<in TUpdate, in TClient> : IUpdateHandler
     where TUpdate : class
     where TClient : class
 {

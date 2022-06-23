@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using BotFramework.Context;
 using BotFramework.Context.Interfaces;
 using BotFramework.Handlers;
@@ -18,12 +17,21 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient(clientFactory);
         services.TryAddTransient<IBotContextFactory<TClient>, BotContextFactory<TClient>>();
         services.TryAddTransient<IUpdateHandlerFactory<TClient>, UpdateHandlerFactory<TClient>>();
-        services.TryAddSingleton<IUpdateReceiver, UpdatesMediator<TClient>>();
-        services.TryAddSingleton<IUpdateScheduler, UpdatesMediator<TClient>>();
+        services.TryAddSingleton<IUpdateReceiver, RequestMediator<TClient>>();
+        services.TryAddSingleton<IUpdateScheduler, RequestMediator<TClient>>();
 
         return services;
     }
-    
+
+    public static IServiceCollection AddBotFramework<TClient>(this IServiceCollection services)
+        where TClient : class
+    {
+        return services.AddBotFramework
+        (
+            provider => provider.GetRequiredService<TClient>()
+        );
+    }
+
     public static IServiceCollection AddHandler<THandlerImplementation>(this IServiceCollection services)
         where THandlerImplementation : IUpdateHandler
     {

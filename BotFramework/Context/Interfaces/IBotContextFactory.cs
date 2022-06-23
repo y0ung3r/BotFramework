@@ -1,10 +1,9 @@
-﻿using BotFramework.Handlers.Interfaces;
-using BotFramework.Interfaces;
+﻿using BotFramework.Interfaces;
 
 namespace BotFramework.Context.Interfaces;
 
-public interface IBotContextFactory<TClient>
+public interface IBotContextFactory<out TClient>
     where TClient : class
 {
-    IBotContext<TClient> Create(IUpdateScheduler scheduler, IUpdateHandler handler);
+    IBotContext<TClient> Create(IUpdateScheduler scheduler);
 }

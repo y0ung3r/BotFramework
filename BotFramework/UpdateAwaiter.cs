@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace BotFramework;
 
-internal class ReceivingPromise
+internal class UpdateAwaiter
 {
     private object _update;
     
@@ -12,14 +12,11 @@ internal class ReceivingPromise
     
     public Type UpdateType { get; }
     
-    public Type TargetType { get; }
-    
-    public ReceivingPromise(Type updateType, Type targetType)
+    public UpdateAwaiter(Type updateType)
     {
         _supplyCancellationTokenSource = new CancellationTokenSource();
         
         UpdateType = updateType;
-        TargetType = targetType;
     }
 
     public void Supply<TUpdate>(TUpdate update)

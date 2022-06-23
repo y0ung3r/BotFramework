@@ -1,34 +1,31 @@
-﻿using System.Threading.Tasks;
-using BotFramework;
-using BotFramework.Extensions;
-using BotFramework.Interfaces;
+﻿using BotFramework.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
-using WebApi.Handlers;
+using Telegram.Bot.Types.Enums;
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class BotController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class BotController : ControllerBase
+    private readonly IUpdateReceiver _receiver;
+    
+    public BotController(IUpdateReceiver receiver)
     {
-        private readonly RequestDelegate _branch;
+        _receiver = receiver;
+    }
         
-        // Конфигурация BranchBuilder
-        public BotController(IBranchBuilder branchBuilder)
+    [HttpPost]
+    [Route("GetUpdates")]
+    public IActionResult Post([FromBody] Update update)
+    {
+        // Отправка новых сообщений от Telegram в цепочку обработчиков
+        if (update.Type == UpdateType.Message)
         {
-            _branch = branchBuilder.UseHandler<EchoHandler>()
-                                   .Build();
+            _receiver.Receive(update.Message);
         }
-        
-        [HttpPost]
-        [Route("GetUpdates")]
-        public async Task<IActionResult> Post([FromBody] Update update)
-        {
-            // Отправка новых обновлений от Telegram в цепочку обработчиков
-            await _branch(update);
 
-            return Ok();
-        }
+        return Ok();
     }
 }
