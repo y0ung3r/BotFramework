@@ -20,17 +20,20 @@ namespace Basics
 			_simpleService = simpleService;
 		}
 
-		public Task HandleAsync(string update, IBotContext<TextWriter> context)
+		public async Task HandleAsync(string update, IBotContext<TextWriter> context)
 		{
 			Console.WriteLine($"Обновление получено: {update}");
 			
-			// Дополнительная логика с помощью сервиса
+			// Ожидание обновлений от внешней системы
+			Console.WriteLine("Введите дополнительные данные:");
+			var payload = await context.WaitNextUpdateAsync<string>();
+			Console.WriteLine(payload);
+			
+			// Дополнительная логика с использованием сервиса
 			if (_simpleService.BotFrameworkIsCool)
 			{
 				Console.WriteLine("DI работает!");
 			}
-			
-			return Task.CompletedTask;
 		}
 	}
 }

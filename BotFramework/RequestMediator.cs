@@ -25,11 +25,22 @@ internal class RequestMediator<TClient> : IUpdateReceiver, IUpdateScheduler
         where TUpdate : class
     {
         var updateType = typeof(TUpdate);
-        var promise = new UpdateAwaiter(updateType);
+        var awaiter = new UpdateAwaiter(updateType);
         
-        _awaiters.Add(promise);
+        _awaiters.Add(awaiter);
         
-        return promise;
+        return awaiter;
+    }
+
+    private Task<bool> CheckPrerequisiteIfExists<TUpdate>(IUpdateHandler<TUpdate, TClient> handler, TUpdate update)
+        where TUpdate : class
+    {
+        if (handler is IWithAsyncPrerequisite<TUpdate> prerequisite)
+        {
+            return prerequisite.CanHandleAsync(update);
+        }
+
+        return Task.FromResult(true);
     }
 
     private async Task ReceiveAsync<TUpdate>(TUpdate update)
@@ -48,7 +59,11 @@ internal class RequestMediator<TClient> : IUpdateReceiver, IUpdateScheduler
             foreach (var handler in handlers)
             {
                 var botContext = _contextFactory.Create(this);
-                await handler.HandleAsync(update, botContext);
+                
+                if (await CheckPrerequisiteIfExists(handler, update))
+                {
+                    await handler.HandleAsync(update, botContext);
+                }
             }
         }
         else
