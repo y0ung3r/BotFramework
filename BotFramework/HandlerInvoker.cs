@@ -5,18 +5,33 @@ using BotFramework.Interfaces;
 
 namespace BotFramework;
 
+/// <summary>
+/// Реализация для <see cref="IHandlerInvoker"/>
+/// </summary>
+/// <typeparam name="TClient">Тип внешней системы</typeparam>
 public class HandlerInvoker<TClient> : IHandlerInvoker
 	where TClient : class
 {
 	private readonly IBotContextFactory<TClient> _contextFactory;
-	private readonly IUpdateHandlerProvider<TClient> _handlerFactory;
+	private readonly IUpdateHandlerProvider _handlerFactory;
 
-	public HandlerInvoker(IBotContextFactory<TClient> contextFactory, IUpdateHandlerProvider<TClient> handlerFactory)
+	/// <summary>
+	/// Инициализирует <see cref="HandlerInvoker{TClient}"/>
+	/// </summary>
+	/// <param name="contextFactory"></param>
+	/// <param name="handlerFactory"></param>
+	public HandlerInvoker(IBotContextFactory<TClient> contextFactory, IUpdateHandlerProvider handlerFactory)
 	{
 		_contextFactory = contextFactory;
 		_handlerFactory = handlerFactory;
 	}
 
+	/// <summary>
+	/// Выполняет проверку условия выполнения для указанного обработчика
+	/// </summary>
+	/// <param name="handler">Обработчик</param>
+	/// <param name="update">Обновление</param>
+	/// <typeparam name="TUpdate">Тип обновления</typeparam>
 	private Task<bool> CheckPrerequisiteIfExists<TUpdate>(IUpdateHandler<TUpdate, TClient> handler, TUpdate update)
 		where TUpdate : class
 	{
@@ -28,10 +43,11 @@ public class HandlerInvoker<TClient> : IHandlerInvoker
 		return Task.FromResult(true);
 	}
 
+	/// <inheritdoc />
 	public async Task InvokeAsync<TUpdate>(IUpdateScheduler scheduler, TUpdate update)
 		where TUpdate : class
 	{
-		var handlers = _handlerFactory.GetAll<TUpdate>();
+		var handlers = _handlerFactory.GetAll<TUpdate, TClient>();
 
 		foreach (var handler in handlers)
 		{

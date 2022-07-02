@@ -6,13 +6,23 @@ using BotFramework.Interfaces;
 
 namespace BotFramework;
 
+/// <summary>
+/// Реализация для <see cref="IUpdateReceiver"/> и <see cref="IUpdateScheduler"/>
+/// </summary>
 internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
 {
+    /// <summary>
+    /// Запросы на ожидание обновлений
+    /// </summary>
     internal IReadOnlyCollection<UpdateAwaiter> Awaiters => new ReadOnlyCollection<UpdateAwaiter>(_awaiters);
 
     private readonly IHandlerInvoker _handlerInvoker;
     private readonly IList<UpdateAwaiter> _awaiters;
 
+    /// <summary>
+    /// Инициализирует <see cref="RequestMediator"/>
+    /// </summary>
+    /// <param name="handlerInvoker">Реализация механизма запуска обработчиков</param>
     public RequestMediator(IHandlerInvoker handlerInvoker)
     {
         _handlerInvoker = handlerInvoker;
@@ -20,6 +30,10 @@ internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
         _awaiters = new List<UpdateAwaiter>();
     }
     
+    /// <summary>
+    /// Создает запрос на ожидание обновления
+    /// </summary>
+    /// <typeparam name="TUpdate">Тип обновления</typeparam>
     private UpdateAwaiter CreateAwaiter<TUpdate>() 
         where TUpdate : class
     {
@@ -31,6 +45,11 @@ internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
         return awaiter;
     }
 
+    /// <summary>
+    /// Реализация для <see cref="Receive{TUpdate}"/>
+    /// </summary>
+    /// <param name="update">Обновление</param>
+    /// <typeparam name="TUpdate">Тип обновления</typeparam>
     private async Task ReceiveAsync<TUpdate>(TUpdate update)
         where TUpdate : class
     {
@@ -51,6 +70,7 @@ internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
         }
     }
 
+    /// <inheritdoc />
     public void Receive<TUpdate>(TUpdate update)
         where TUpdate : class
     {
@@ -60,6 +80,7 @@ internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
         );
     }
 
+    /// <inheritdoc />
     public Task<TUpdate> ScheduleAsync<TUpdate>() 
         where TUpdate : class
     {
