@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using BotFramework.Interfaces;
@@ -7,8 +8,10 @@ namespace BotFramework;
 
 internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
 {
+    internal IReadOnlyCollection<UpdateAwaiter> Awaiters => new ReadOnlyCollection<UpdateAwaiter>(_awaiters);
+
     private readonly IHandlerInvoker _handlerInvoker;
-    private readonly ICollection<UpdateAwaiter> _awaiters;
+    private readonly IList<UpdateAwaiter> _awaiters;
 
     public RequestMediator(IHandlerInvoker handlerInvoker)
     {
