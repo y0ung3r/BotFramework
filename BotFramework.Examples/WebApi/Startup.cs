@@ -8,92 +8,91 @@ using Microsoft.OpenApi.Models;
 using Telegram.Bot;
 using WebApi.Handlers;
 
-namespace WebApi
+namespace WebApi;
+
+public class Startup
 {
-    public class Startup
-    {
-        // Конфигурация бота из appsettings.json
-        public BotConfiguration BotConfiguration { get; }
+    // Конфигурация бота из appsettings.json
+    public BotConfiguration BotConfiguration { get; }
         
-        public Startup(IConfiguration configuration)
-        {
-            BotConfiguration = configuration.GetSection("BotConfiguration")
-                                            .Get<BotConfiguration>();
-        }
+    public Startup(IConfiguration configuration)
+    {
+        BotConfiguration = configuration.GetSection("BotConfiguration")
+            .Get<BotConfiguration>();
+    }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // Внедрение WebHook'а
-            services.AddHostedService<WebhookConfiguration>();
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Внедрение WebHook'а
+        services.AddHostedService<WebhookConfiguration>();
             
-            // Внедрение Telegram.Bot
-            services.AddHttpClient("tgwebhook")
-                    .AddTypedClient<ITelegramBotClient>
+        // Внедрение Telegram.Bot
+        services.AddHttpClient("tgwebhook")
+                .AddTypedClient<ITelegramBotClient>
+                (
+                    httpClient => new TelegramBotClient
                     (
-                        httpClient => new TelegramBotClient
-                        (
-                            BotConfiguration.Token, 
-                            httpClient
-                        )
-                    );
-            
-            // Внедрение BotFramework    
-            services.AddBotFramework()
-                    .AddHandler<EchoHandler>();
-            
-            services.AddControllers()
-                    .AddNewtonsoftJson();
-
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc
-                (
-                    "v1",
-                    new OpenApiInfo
-                    {
-                        Title = "WebApi", 
-                        Version = "v1"
-                    }
+                        BotConfiguration.Token, 
+                        httpClient
+                    )
                 );
-            });
-        }
+            
+        // Внедрение BotFramework    
+        services.AddBotFramework<ITelegramBotClient>()
+                .AddHandler<EchoHandler>();
+            
+        services.AddControllers()
+            .AddNewtonsoftJson();
 
-        // Большая часть параметров для настройки Telegram Bot API взята из https://github.com/TelegramBots/Telegram.Bot.Examples/tree/master/Telegram.Bot.Examples.WebHook
-        public void Configure(IApplicationBuilder applicationBuilder, IWebHostEnvironment environment)
+        services.AddSwaggerGen(options =>
         {
-            if (environment.IsDevelopment())
-            {
-                applicationBuilder.UseDeveloperExceptionPage()
-                                  .UseSwagger()
-                                  .UseSwaggerUI
-                                  (
-                                      options => options.SwaggerEndpoint
-                                      (
-                                          "/swagger/v1/swagger.json", 
-                                          "WebApi v1"
-                                      )
-                                  );
-            }
+            options.SwaggerDoc
+            (
+                "v1",
+                new OpenApiInfo
+                {
+                    Title = "WebApi", 
+                    Version = "v1"
+                }
+            );
+        });
+    }
 
-            applicationBuilder.UseHttpsRedirection()
-                              .UseRouting()
-                              .UseCors();
-
-            applicationBuilder.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute
+    // Большая часть параметров для настройки Telegram Bot API взята из https://github.com/TelegramBots/Telegram.Bot.Examples/tree/master/Telegram.Bot.Examples.WebHook
+    public void Configure(IApplicationBuilder applicationBuilder, IWebHostEnvironment environment)
+    {
+        if (environment.IsDevelopment())
+        {
+            applicationBuilder.UseDeveloperExceptionPage()
+                .UseSwagger()
+                .UseSwaggerUI
                 (
-                    name: "tgwebhook",
-                    pattern: $"Bot/GetUpdates",
-                    new
-                    {
-                        сontroller = "Bot",
-                        action = "Post"
-                    }
+                    options => options.SwaggerEndpoint
+                    (
+                        "/swagger/v1/swagger.json", 
+                        "WebApi v1"
+                    )
                 );
-                
-                endpoints.MapControllers();
-            });
         }
+
+        applicationBuilder.UseHttpsRedirection()
+                          .UseRouting()
+                          .UseCors();
+
+        applicationBuilder.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllerRoute
+            (
+                name: "tgwebhook",
+                pattern: $"Bot/GetUpdates",
+                new
+                {
+                    сontroller = "Bot",
+                    action = "Post"
+                }
+            );
+                
+            endpoints.MapControllers();
+        });
     }
 }

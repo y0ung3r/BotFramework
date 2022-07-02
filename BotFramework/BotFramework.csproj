@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0;netstandard2.0</TargetFrameworks>
-    <Version>2.1.8</Version>
+    <Version>3.0.0</Version>
     <Authors>y0ung3r (Nikita Velikiy)</Authors>
     <Title>BotFramework</Title>
     <Description>Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей</Description>
@@ -12,6 +11,7 @@
     <PackageTags>.net;bot;bot-framework;botframework;framework</PackageTags>
     <PackageProjectUrl>https://github.com/y0ung3r/BotFramework</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   
   <PropertyGroup>

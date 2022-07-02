@@ -1,18 +1,17 @@
-﻿namespace WebApi
+﻿namespace WebApi;
+
+/// <summary>
+/// Конфигурация для Telegram Bot API
+/// </summary>
+public class BotConfiguration
 {
     /// <summary>
-    /// Конфигурация для Telegram Bot API
+    /// Токен
     /// </summary>
-    public class BotConfiguration
-    {
-        /// <summary>
-        /// Токен
-        /// </summary>
-        public string Token { get; init; }
+    public string Token { get; init; }
         
-        /// <summary>
-        /// Адрес на который осуществляет поставка обновлений от Telegram
-        /// </summary>
-        public string WebHookAddress { get; init; }
-    }
+    /// <summary>
+    /// Адрес на который осуществляет поставка обновлений от Telegram
+    /// </summary>
+    public string WebHookAddress { get; init; }
 }
