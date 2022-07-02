@@ -20,7 +20,7 @@ public class BotController : ControllerBase
     [Route("GetUpdates")]
     public IActionResult Post([FromBody] Update update)
     {
-        // Отправка новых сообщений от Telegram в цепочку обработчиков
+        // Получение новых сообщений от Telegram
         if (update.Type == UpdateType.Message)
         {
             _receiver.Receive(update.Message);
