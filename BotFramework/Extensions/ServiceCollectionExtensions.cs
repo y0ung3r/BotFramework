@@ -16,9 +16,10 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddTransient(clientFactory);
         services.TryAddTransient<IBotContextFactory<TClient>, BotContextFactory<TClient>>();
-        services.TryAddTransient<IUpdateHandlerFactory<TClient>, UpdateHandlerFactory<TClient>>();
-        services.TryAddSingleton<IUpdateReceiver, RequestMediator<TClient>>();
-        services.TryAddSingleton<IUpdateScheduler, RequestMediator<TClient>>();
+        services.TryAddTransient<IUpdateHandlerProvider<TClient>, UpdateHandlerProvider<TClient>>();
+        services.TryAddTransient<IHandlerInvoker, HandlerInvoker<TClient>>();
+        services.TryAddSingleton<IUpdateReceiver, RequestMediator>();
+        services.TryAddSingleton<IUpdateScheduler, RequestMediator>();
 
         return services;
     }

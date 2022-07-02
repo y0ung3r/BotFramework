@@ -1,23 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BotFramework.Context.Interfaces;
-using BotFramework.Handlers.Interfaces;
 using BotFramework.Interfaces;
 
 namespace BotFramework;
 
-internal class RequestMediator<TClient> : IUpdateReceiver, IUpdateScheduler
-    where TClient : class
+internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
 {
-    private readonly IBotContextFactory<TClient> _contextFactory;
-    private readonly IUpdateHandlerFactory<TClient> _handlerFactory;
+    private readonly IHandlerInvoker _handlerInvoker;
     private readonly ICollection<UpdateAwaiter> _awaiters;
 
-    public RequestMediator(IBotContextFactory<TClient> contextFactory, IUpdateHandlerFactory<TClient> handlerFactory)
+    public RequestMediator(IHandlerInvoker handlerInvoker)
     {
-        _contextFactory = contextFactory;
-        _handlerFactory = handlerFactory;
+        _handlerInvoker = handlerInvoker;
+        
         _awaiters = new List<UpdateAwaiter>();
     }
     
@@ -32,17 +28,6 @@ internal class RequestMediator<TClient> : IUpdateReceiver, IUpdateScheduler
         return awaiter;
     }
 
-    private Task<bool> CheckPrerequisiteIfExists<TUpdate>(IUpdateHandler<TUpdate, TClient> handler, TUpdate update)
-        where TUpdate : class
-    {
-        if (handler is IWithAsyncPrerequisite<TUpdate> prerequisite)
-        {
-            return prerequisite.CanHandleAsync(update);
-        }
-
-        return Task.FromResult(true);
-    }
-
     private async Task ReceiveAsync<TUpdate>(TUpdate update)
         where TUpdate : class
     {
@@ -54,17 +39,7 @@ internal class RequestMediator<TClient> : IUpdateReceiver, IUpdateScheduler
 
         if (existingAwaiter is null)
         {
-            var handlers = _handlerFactory.Create<TUpdate>();
-
-            foreach (var handler in handlers)
-            {
-                var botContext = _contextFactory.Create(this);
-                
-                if (await CheckPrerequisiteIfExists(handler, update))
-                {
-                    await handler.HandleAsync(update, botContext);
-                }
-            }
+            await _handlerInvoker.InvokeAsync(this, update);
         }
         else
         {

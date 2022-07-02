@@ -2,9 +2,9 @@
 
 namespace BotFramework.Handlers.Interfaces;
 
-public interface IUpdateHandlerFactory<in TClient>
+public interface IUpdateHandlerProvider<in TClient>
     where TClient : class
 {
-    public IEnumerable<IUpdateHandler<TUpdate, TClient>> Create<TUpdate>()
+    public IEnumerable<IUpdateHandler<TUpdate, TClient>> GetAll<TUpdate>()
         where TUpdate : class;
 }

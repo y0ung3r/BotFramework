@@ -4,18 +4,16 @@ using BotFramework.Handlers.Interfaces;
 
 namespace BotFramework.Handlers;
 
-public class UpdateHandlerFactory<TClient> : IUpdateHandlerFactory<TClient>
+public class UpdateHandlerProvider<TClient> : IUpdateHandlerProvider<TClient>
     where TClient : class
 {
-    private readonly TClient _client;
     private readonly IEnumerable<IUpdateHandler> _handlers;
 
-    public UpdateHandlerFactory(TClient client, IEnumerable<IUpdateHandler> handlers)
+    public UpdateHandlerProvider(IEnumerable<IUpdateHandler> handlers)
     {
-        _client = client;
         _handlers = handlers;
     }
     
-    public IEnumerable<IUpdateHandler<TUpdate, TClient>> Create<TUpdate>() 
+    public IEnumerable<IUpdateHandler<TUpdate, TClient>> GetAll<TUpdate>() 
         where TUpdate : class => _handlers.OfType<IUpdateHandler<TUpdate, TClient>>();
 }
