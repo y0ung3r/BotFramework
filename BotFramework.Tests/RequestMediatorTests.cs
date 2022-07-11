@@ -6,6 +6,9 @@ using Xunit;
 
 namespace BotFramework.Tests;
 
+/// <summary>
+/// Тесты для <see cref="RequestMediator"/>
+/// </summary>
 public class RequestMediatorTests
 {
 	private readonly AutoMocker _mocker;

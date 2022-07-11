@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:nodes="clr-namespace:BotFramework.Previewer.Components.Nodes">
+    <DataTemplate x:Key="OperationNodeDataTemplate"
+                  DataType="nodes:OperationNode">
+        <Border Name="NodeLayout"
+                CornerRadius="2"
+                BorderThickness="1"
+                BorderBrush="Gray"
+                Background="White"
+                Padding="5">
+            <TextBlock Text="{Binding Name, StringFormat=Ожидается обновление с типом \{0\}}"
+                       Foreground="Black" />
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>
