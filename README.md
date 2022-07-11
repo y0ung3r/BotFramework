@@ -13,7 +13,44 @@
 * **Работа с расширяемыми абстракциями, предназначенные для реализации поддерживаемой логики обработчиков:**
   * Безопасная передача типизированного обновления в обработчик;
   * Проверка пользовательских условий перед обработкой обновления.
-* **Поддержка Dependency Injection в обработчиках**.
+* **Поддержка Dependency Injection в обработчиках;**
+* **Отображение дерева обработчиков в отдельном приложении.**
+
+## BotFramework Previewer
+####_Особая благодарность [@inyutin-maxim](https://github.com/inyutin-maxim "@inyutin-maxim")_
+Начиная с версии **3.1.0**, у Вас имеется возможность просматривать дерево своих обработчиков.
+[![build](https://i.imgur.com/97TtQAv.png)](https://i.imgur.com/97TtQAv.png)
+#### Установка
+Перед использованием Вам нужно установить **Previewer** в качестве инструмента, используя следующую команду терминала:
+```shell
+dotnet tool install --global BotFramework.NET.Previewer
+```
+#### Использование
+Зарегистрируйте **Previewer** в контейнере зависимостей следующим образом:
+```csharp
+var services = new ServiceCollection();
+
+// Внедряем BotFramework и обработчики
+services.AddBotFramework<ITelegramBotClient>()
+        .AddHandler<SimpleHandler>()
+        .AddPreviewer();
+```
+В том месте Вашего кода, где необходимо открыть **Previewer**, используйте **IPreviewerRunner**:
+```csharp
+var serviceProvider = services.BuildServiceProvider();
+var runner = serviceProvider.GetRequiredService<IPreviewerRunner>();
+runner.Run();
+```
+####Обновление
+Следующая команда терминала выполнит обновление инструмента:
+```shell
+dotnet tool update --global BotFramework.NET.Previewer
+```
+####Удаление
+Следующая команда терминала выполнит удаление инструмента:
+```shell
+dotnet tool uninstall --global BotFramework.NET.Previewer
+```
 
 ## Начало работы
 #### Регистрация BotFramework в контейнере зависимостей

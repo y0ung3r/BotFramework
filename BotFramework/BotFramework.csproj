@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <Authors>y0ung3r (Nikita Velikiy)</Authors>
     <Title>BotFramework</Title>
-    <Description>Фреймворк для создания ботов под любую платформу на основе обработки запросов с помощью цепочки обязанностей</Description>
+    <Description>Фреймворк для создания ботов под любую платформу</Description>
     <RepositoryUrl>https://github.com/y0ung3r/BotFramework</RepositoryUrl>
     <PackageId>BotFramework.NET</PackageId>
     <Product>BotFramework</Product>

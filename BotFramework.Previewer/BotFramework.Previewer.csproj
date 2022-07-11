@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <Version>1.0.0</Version>
+        <TargetFramework>net6.0</TargetFramework>
+        <Authors>y0ung3r (Nikita Velikiy)</Authors>
+        <Title>BotFramework.Previewer</Title>
+        <Description>Фреймворк для создания ботов под любую платформу</Description>
+        <RepositoryUrl>https://github.com/y0ung3r/BotFramework</RepositoryUrl>
+        <PackageId>BotFramework.NET.Previewer</PackageId>
+        <Product>BotFramework</Product>
+        <PackageTags>.net;bot;bot-framework;botframework;framework</PackageTags>
+        <PackageProjectUrl>https://github.com/y0ung3r/BotFramework</PackageProjectUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>botframework-previewer</ToolCommandName>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <RepositoryType>git</RepositoryType>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <OutputType>exe</OutputType>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+        <None Remove=".gitignore" />
+        <None Remove="BotFramework.Previewer\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="0.10.15" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.15" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.14" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.15" />
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.15.1" />
+        <PackageReference Include="AvaloniaGraphControl" Version="0.4.1" />
+        <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\BotFramework.MetadataAnalyzer\BotFramework.MetadataAnalyzer.csproj" />
+      <ProjectReference Include="..\BotFramework\BotFramework.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <AvaloniaXaml Remove="BotFramework.Previewer\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Remove="BotFramework.Previewer\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Remove="BotFramework.Previewer\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\LICE*" Pack="true" PackagePath="\" />
+    </ItemGroup>
+</Project>
