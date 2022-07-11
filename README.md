@@ -17,7 +17,7 @@
 * **Отображение дерева обработчиков в отдельном приложении.**
 
 ## BotFramework Previewer
-####_Особая благодарность [@inyutin-maxim](https://github.com/inyutin-maxim "@inyutin-maxim")_
+#### _Особая благодарность [@inyutin-maxim](https://github.com/inyutin-maxim "@inyutin-maxim")_
 Начиная с версии **3.1.0**, у Вас имеется возможность просматривать дерево своих обработчиков.
 [![build](https://i.imgur.com/97TtQAv.png)](https://i.imgur.com/97TtQAv.png)
 #### Установка
@@ -41,12 +41,12 @@ var serviceProvider = services.BuildServiceProvider();
 var runner = serviceProvider.GetRequiredService<IPreviewerRunner>();
 runner.Run();
 ```
-####Обновление
+#### Обновление
 Следующая команда терминала выполнит обновление инструмента:
 ```shell
 dotnet tool update --global BotFramework.NET.Previewer
 ```
-####Удаление
+#### Удаление
 Следующая команда терминала выполнит удаление инструмента:
 ```shell
 dotnet tool uninstall --global BotFramework.NET.Previewer
