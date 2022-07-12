@@ -22,14 +22,14 @@ jobs:
       - name: Test
         run: dotnet test
       - name: Publish BotFramework to NuGet
-        uses: alirezanet/publish-nuget@v3
+        uses: alirezanet/publish-nuget@v3.0.0
         with:
           PROJECT_FILE_PATH: BotFramework/BotFramework.csproj
           PACKAGE_NAME: BotFramework.NET
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
       - name: Publish BotFramework Previewer to NuGet
-        uses: alirezanet/publish-nuget@v3
+        uses: alirezanet/publish-nuget@v3.0.0
         with:
           PROJECT_FILE_PATH: BotFramework/BotFramework.Previewer.csproj
           PACKAGE_NAME: BotFramework.NET.Previewer
