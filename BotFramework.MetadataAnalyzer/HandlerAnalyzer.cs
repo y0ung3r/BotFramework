@@ -26,7 +26,7 @@ public class HandlerAnalyzer : IHandlerAnalyzer
 	/// <summary>
 	/// Наименование метода, который определяет условия запуска обработчика
 	/// </summary>
-	private const string PrerequisiteMethod = nameof(IWithAsyncPrerequisite<object>.CanHandleAsync);
+	private const string PrerequisiteMethod = nameof(IWithAsyncPrerequisite<object, object>.CanHandleAsync);
 	
 	/// <summary>
 	/// Десериализованный .dll сборки

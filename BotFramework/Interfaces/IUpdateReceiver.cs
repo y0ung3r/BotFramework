@@ -1,6 +1,4 @@
-﻿using BotFramework.Extensions;
-
-namespace BotFramework.Interfaces;
+﻿namespace BotFramework.Interfaces;
 
 /// <summary>
 /// Определяет точку получения обновлений от внешней системы
