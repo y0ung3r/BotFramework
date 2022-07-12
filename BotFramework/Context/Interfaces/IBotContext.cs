@@ -7,7 +7,6 @@ namespace BotFramework.Context.Interfaces;
 /// </summary>
 /// <typeparam name="TClient">Тип внешней система</typeparam>
 public interface IBotContext<out TClient>
-    where TClient : class
 {
     /// <summary>
     /// Внешняя система

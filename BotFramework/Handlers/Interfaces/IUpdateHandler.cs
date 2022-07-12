@@ -15,8 +15,6 @@ public interface IUpdateHandler
 /// <typeparam name="TUpdate">Тип обновления</typeparam>
 /// <typeparam name="TClient">Тип внешней системы</typeparam>
 public interface IUpdateHandler<in TUpdate, in TClient> : IUpdateHandler
-    where TUpdate : class
-    where TClient : class
 {
     /// <summary>
     /// Выполняет обработку обновления, используя указанный контекст

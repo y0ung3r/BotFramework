@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>3.1.0</Version>
+    <Version>4.0.0</Version>
     <Authors>y0ung3r (Nikita Velikiy)</Authors>
     <Title>BotFramework</Title>
     <Description>Фреймворк для создания ботов под любую платформу</Description>

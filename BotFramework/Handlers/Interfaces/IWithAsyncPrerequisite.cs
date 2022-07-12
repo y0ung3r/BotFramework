@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BotFramework.Context.Interfaces;
 
 namespace BotFramework.Handlers.Interfaces;
 
@@ -6,12 +7,13 @@ namespace BotFramework.Handlers.Interfaces;
 /// Определяет асинхронное условие выполнение обработчика
 /// </summary>
 /// <typeparam name="TUpdate">Тип обновления</typeparam>
-public interface IWithAsyncPrerequisite<in TUpdate>
-	where TUpdate : class
+/// <typeparam name="TClient">Тип внешней системы</typeparam>
+public interface IWithAsyncPrerequisite<in TUpdate, in TClient>
 {
 	/// <summary>
 	/// Проверяет возможно ли выполнить обработку обновления от внешней системы
 	/// </summary>
 	/// <param name="update">Обновление</param>
-	Task<bool> CanHandleAsync(TUpdate update);
+	/// <param name="context">Контекст</param>
+	Task<bool> CanHandleAsync(TUpdate update, IBotContext<TClient> context);
 }

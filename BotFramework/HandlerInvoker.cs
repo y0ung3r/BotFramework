@@ -31,13 +31,13 @@ public class HandlerInvoker<TClient> : IHandlerInvoker
 	/// </summary>
 	/// <param name="handler">Обработчик</param>
 	/// <param name="update">Обновление</param>
+	/// <param name="context">Контекст</param>
 	/// <typeparam name="TUpdate">Тип обновления</typeparam>
-	private Task<bool> CheckPrerequisiteIfExists<TUpdate>(IUpdateHandler<TUpdate, TClient> handler, TUpdate update)
-		where TUpdate : class
+	private Task<bool> CheckPrerequisiteIfExists<TUpdate>(IUpdateHandler<TUpdate, TClient> handler, TUpdate update, IBotContext<TClient> context)
 	{
-		if (handler is IWithAsyncPrerequisite<TUpdate> prerequisite)
+		if (handler is IWithAsyncPrerequisite<TUpdate, TClient> prerequisite)
 		{
-			return prerequisite.CanHandleAsync(update);
+			return prerequisite.CanHandleAsync(update, context);
 		}
 
 		return Task.FromResult(true);
@@ -45,7 +45,6 @@ public class HandlerInvoker<TClient> : IHandlerInvoker
 
 	/// <inheritdoc />
 	public async Task InvokeAsync<TUpdate>(IUpdateScheduler scheduler, TUpdate update)
-		where TUpdate : class
 	{
 		var handlers = _handlerFactory.GetAll<TUpdate, TClient>();
 
@@ -53,7 +52,7 @@ public class HandlerInvoker<TClient> : IHandlerInvoker
 		{
 			var botContext = _contextFactory.Create(scheduler);
                 
-			if (await CheckPrerequisiteIfExists(handler, update))
+			if (await CheckPrerequisiteIfExists(handler, update, botContext))
 			{
 				await handler.HandleAsync(update, botContext);
 			}

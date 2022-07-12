@@ -7,7 +7,6 @@ namespace BotFramework.Context.Interfaces;
 /// </summary>
 /// <typeparam name="TClient">Тип внешней системы</typeparam>
 public interface IBotContextFactory<out TClient>
-    where TClient : class
 {
     /// <summary>
     /// Создает контекст для обработчика обновления

@@ -20,8 +20,6 @@ public class UpdateHandlerProvider : IUpdateHandlerProvider
     
     /// <inheritdoc />
     public IEnumerable<IUpdateHandler<TUpdate, TClient>> GetAll<TUpdate, TClient>() 
-        where TUpdate : class
-        where TClient : class
     {
         return _handlers.OfType<IUpdateHandler<TUpdate, TClient>>();
     }

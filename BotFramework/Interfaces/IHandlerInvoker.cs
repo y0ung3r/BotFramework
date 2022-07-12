@@ -13,6 +13,5 @@ public interface IHandlerInvoker
 	/// <param name="scheduler">Планировщик для ожидания новых обновлений от внешней системы</param>
 	/// <param name="update">Обновление</param>
 	/// <typeparam name="TUpdate">Тип обновления</typeparam>
-	Task InvokeAsync<TUpdate>(IUpdateScheduler scheduler, TUpdate update)
-		where TUpdate : class;
+	Task InvokeAsync<TUpdate>(IUpdateScheduler scheduler, TUpdate update);
 }

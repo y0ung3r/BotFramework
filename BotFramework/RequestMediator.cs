@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using BotFramework.Extensions;
 using BotFramework.Interfaces;
 
 namespace BotFramework;
@@ -34,8 +35,7 @@ internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
     /// Создает запрос на ожидание обновления
     /// </summary>
     /// <typeparam name="TUpdate">Тип обновления</typeparam>
-    private UpdateAwaiter CreateAwaiter<TUpdate>() 
-        where TUpdate : class
+    private UpdateAwaiter CreateAwaiter<TUpdate>()
     {
         var updateType = typeof(TUpdate);
         var awaiter = new UpdateAwaiter(updateType);
@@ -46,12 +46,11 @@ internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
     }
 
     /// <summary>
-    /// Реализация для <see cref="Receive{TUpdate}"/>
+    /// Реализация для <see cref="Receive"/>
     /// </summary>
     /// <param name="update">Обновление</param>
     /// <typeparam name="TUpdate">Тип обновления</typeparam>
     private async Task ReceiveAsync<TUpdate>(TUpdate update)
-        where TUpdate : class
     {
         var updateType = update.GetType();
         var existingAwaiter = _awaiters.FirstOrDefault
@@ -70,9 +69,12 @@ internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
         }
     }
 
-    /// <inheritdoc />
-    public void Receive<TUpdate>(TUpdate update)
-        where TUpdate : class
+    /// <summary>
+    /// Используется для асинхронного запуска <see cref="ReceiveAsync{TUpdate}"/>
+    /// </summary>
+    /// <param name="update">Обновление</param>
+    /// <typeparam name="TUpdate">Тип обновления</typeparam>
+    private void Receive<TUpdate>(TUpdate update)
     {
         Task.Run
         (
@@ -81,8 +83,13 @@ internal class RequestMediator : IUpdateReceiver, IUpdateScheduler
     }
 
     /// <inheritdoc />
-    public Task<TUpdate> ScheduleAsync<TUpdate>() 
-        where TUpdate : class
+    public void Receive(object update)
+    {
+        this.InvokeReceive(update);
+    }
+
+    /// <inheritdoc />
+    public Task<TUpdate> ScheduleAsync<TUpdate>()
     {
         var awaiter = CreateAwaiter<TUpdate>();
         return awaiter.WaitUpdateAsync<TUpdate>();
