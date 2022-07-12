@@ -7,7 +7,6 @@ namespace BotFramework.Handlers.Interfaces;
 /// </summary>
 /// <typeparam name="TUpdate">Тип обновления</typeparam>
 public interface IWithAsyncPrerequisite<in TUpdate>
-	where TUpdate : class
 {
 	/// <summary>
 	/// Проверяет возможно ли выполнить обработку обновления от внешней системы

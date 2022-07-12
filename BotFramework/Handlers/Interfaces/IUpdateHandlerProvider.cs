@@ -12,7 +12,5 @@ public interface IUpdateHandlerProvider
 	/// </summary>
 	/// <typeparam name="TUpdate">Тип обновления</typeparam>
 	/// <typeparam name="TClient">Тип внешней системы</typeparam>
-    public IEnumerable<IUpdateHandler<TUpdate, TClient>> GetAll<TUpdate, TClient>()
-        where TUpdate : class
-        where TClient : class;
+    public IEnumerable<IUpdateHandler<TUpdate, TClient>> GetAll<TUpdate, TClient>();
 }

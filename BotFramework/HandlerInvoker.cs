@@ -33,7 +33,6 @@ public class HandlerInvoker<TClient> : IHandlerInvoker
 	/// <param name="update">Обновление</param>
 	/// <typeparam name="TUpdate">Тип обновления</typeparam>
 	private Task<bool> CheckPrerequisiteIfExists<TUpdate>(IUpdateHandler<TUpdate, TClient> handler, TUpdate update)
-		where TUpdate : class
 	{
 		if (handler is IWithAsyncPrerequisite<TUpdate> prerequisite)
 		{
@@ -45,7 +44,6 @@ public class HandlerInvoker<TClient> : IHandlerInvoker
 
 	/// <inheritdoc />
 	public async Task InvokeAsync<TUpdate>(IUpdateScheduler scheduler, TUpdate update)
-		where TUpdate : class
 	{
 		var handlers = _handlerFactory.GetAll<TUpdate, TClient>();
 

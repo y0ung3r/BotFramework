@@ -35,7 +35,6 @@ internal class UpdateAwaiter
     /// <param name="update">Обновление</param>
     /// <typeparam name="TUpdate">Тип обновления</typeparam>
     public void Supply<TUpdate>(TUpdate update)
-        where TUpdate : class
     {
         _update = update;
     }
@@ -45,7 +44,6 @@ internal class UpdateAwaiter
     /// </summary>
     /// <typeparam name="TUpdate">Тип обновления</typeparam>
     public Task<TUpdate> WaitUpdateAsync<TUpdate>()
-        where TUpdate : class
     {
         return Task.Run
         (
@@ -67,14 +65,12 @@ internal class UpdateAwaiter
     /// </summary>
     /// <typeparam name="TUpdate">Тип обновления</typeparam>
     private TUpdate WaitUpdate<TUpdate>()
-        where TUpdate : class
     {
-        
         while (_update == null)
         {
             // Ignore...
         }
 
-        return _update as TUpdate;
+        return (TUpdate) _update;
     }
 }

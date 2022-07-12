@@ -11,6 +11,5 @@ public interface IUpdateScheduler
 	/// Планирует ожидание для указанного типа обновления
 	/// </summary>
 	/// <typeparam name="TUpdate">Тип обновления</typeparam>
-    Task<TUpdate> ScheduleAsync<TUpdate>()
-        where TUpdate : class;
+    Task<TUpdate> ScheduleAsync<TUpdate>();
 }
